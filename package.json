@@ -1,0 +1,68 @@
+{
+  "name": "@hitenpatel/strata",
+  "version": "0.1.0",
+  "description": "Strata — a themeable, accessible design system built layer by layer. Two-tier design tokens and Lit 3 web components, documented in Storybook.",
+  "license": "MIT",
+  "author": "Hiten Patel <hello@hiten.dev> (https://hiten.dev)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hitenpatel/strata.git"
+  },
+  "homepage": "https://ui.hiten.dev",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./tokens.css": "./dist/tokens.css",
+    "./tokens.json": "./tokens/tokens.json"
+  },
+  "files": [
+    "dist",
+    "tokens/tokens.json"
+  ],
+  "sideEffects": [
+    "./src/index.ts",
+    "./src/components/**/*.ts",
+    "./dist/index.js",
+    "./dist/components/**/*.js",
+    "*.css"
+  ],
+  "scripts": {
+    "tokens": "node scripts/build-tokens.mjs",
+    "build": "pnpm tokens && tsc -p tsconfig.build.json && cp src/generated/tokens.css dist/tokens.css",
+    "typecheck": "tsc --noEmit",
+    "test": "web-test-runner",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "dependencies": {
+    "lit": "^3.3.3"
+  },
+  "keywords": [
+    "design-system",
+    "design-tokens",
+    "web-components",
+    "lit",
+    "accessibility",
+    "wcag"
+  ],
+  "devDependencies": {
+    "@open-wc/testing": "^4.0.0",
+    "@storybook/addon-a11y": "^8.6",
+    "@storybook/addon-essentials": "^8.6",
+    "@storybook/web-components": "^8.6",
+    "@storybook/web-components-vite": "^8.6",
+    "@types/mocha": "^10.0.10",
+    "@web/dev-server-esbuild": "^1.0.5",
+    "@web/test-runner": "^0.20.2",
+    "@web/test-runner-playwright": "^0.11.1",
+    "playwright": "^1.61.1",
+    "storybook": "^8.6",
+    "typescript": "~5.6"
+  }
+}
