@@ -39,6 +39,37 @@ import '@hitenpatel/strata/tokens.css'; // design token custom properties
 <strata-button variant="danger" loading>Deleting…</strata-button>
 ```
 
+## Framework adapters
+
+One Lit core, consumable everywhere. Full guides live in the
+[Storybook docs](https://ui.hiten.dev).
+
+**React** — typed wrappers via the official `@lit/react`, with properties
+(not attributes) and custom events mapped to `onXxx` props:
+
+```tsx
+import { Button, Pagination } from '@hitenpatel/strata/react';
+
+<Pagination page={page} total={12} onPageChange={(e) => setPage(e.detail.page)} />
+<Button variant="primary" loading={saving}>Save</Button>
+```
+
+**Vue 3** — native custom-element support plus typings and a plugin:
+
+```ts
+// vite.config.ts
+import { isStrataElement } from '@hitenpatel/strata/vue';
+vue({ template: { compilerOptions: { isCustomElement: isStrataElement } } });
+```
+
+```vue
+<strata-select label="Plan" :options.prop="plans" :value="plan" @change="onPlan" />
+<strata-button variant="primary" @click="save">Save</strata-button>
+```
+
+Both adapters are optional peer dependencies — plain-HTML consumers pay no
+extra weight.
+
 ## Development
 
 ```bash

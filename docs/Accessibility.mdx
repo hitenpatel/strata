@@ -1,0 +1,38 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Docs/Accessibility" />
+
+# Accessibility
+
+Strata targets WCAG 2.2 AA. Accessibility is designed in, tested in CI, and
+inspectable on every story in this Storybook via the **Accessibility** panel
+(axe-core, from `@storybook/addon-a11y`).
+
+## What every component guarantees
+
+- **Contrast** — AA in both themes. Where the visual design's raw values
+  failed measurement (12px hint text, badge tone text, table headers), the
+  implementation adjusts within the token system rather than shipping the
+  failure.
+- **Focus** — a designed two-layer `:focus-visible` ring (2px surface,
+  4px focus colour) on every interactive part; never removed, never
+  outline-only.
+- **Keyboard** — WAI-ARIA APG patterns: roving tabindex + arrow keys in Tabs
+  and Menu, radiogroup arrow navigation, `Escape` to dismiss overlays with
+  focus returned to the trigger. Dialog uses native `<dialog>.showModal()`
+  for real focus trapping.
+- **Targets** — 40px minimum interactive size.
+- **Motion** — every transition and animation collapses under
+  `prefers-reduced-motion: reduce` (spinners and skeletons fall back to
+  opacity changes only).
+- **Semantics** — `aria-busy` loading states, `role="switch"`,
+  `aria-invalid`/`aria-describedby` on erroring fields, `aria-live` toast
+  region, `aria-current` in breadcrumb and pagination.
+
+## How it's enforced
+
+Every component's test file runs axe assertions through
+`@open-wc/testing`'s `to.be.accessible()` — per variant and state, in CI on
+every push. The Storybook a11y panel runs the same axe engine
+interactively; flip theme and accent in the toolbar and re-run the checks to
+audit any combination.

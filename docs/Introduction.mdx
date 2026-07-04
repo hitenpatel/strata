@@ -1,0 +1,60 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Docs/Introduction" />
+
+# Strata
+
+A themeable, accessible design system built layer by layer — two-tier design
+tokens and Lit 3 web components. One core, consumable from plain HTML, React
+and Vue.
+
+- **Source**: [github.com/hitenpatel/strata](https://github.com/hitenpatel/strata)
+- **Package**: `@hitenpatel/strata`
+
+## Installation
+
+```bash
+npm install @hitenpatel/strata
+```
+
+```js
+import '@hitenpatel/strata';            // registers all <strata-*> elements
+import '@hitenpatel/strata/tokens.css'; // design token custom properties
+```
+
+```html
+<strata-button variant="primary">Save changes</strata-button>
+```
+
+## Token architecture
+
+Tokens live in a single [W3C Design Tokens](https://design-tokens.github.io/community-group/format/)
+file and compile to CSS custom properties in two tiers:
+
+1. **Primitives** — raw scales: colour ramps (`--strata-color-blue-600`),
+   spacing (`--strata-space-4`), radii, shadows, motion.
+2. **Semantic** — role-based aliases components actually consume:
+   `--strata-surface`, `--strata-text-muted`, `--strata-accent`,
+   `--strata-danger-subtle`, `--strata-focus-ring`…
+
+Components only ever reference semantic tokens, which is what makes theming
+free.
+
+## Theming
+
+Two attributes on `<html>` control appearance; no component code changes:
+
+```html
+<html data-theme="dark">                  <!-- dark theme -->
+<html data-variant="showcase">            <!-- violet accent -->
+<html data-theme="dark" data-variant="showcase">
+```
+
+Try it live: use the **Theme** and **Accent** dropdowns in the toolbar above —
+every story responds instantly.
+
+## Framework support
+
+The Lit components are the single source of truth. Thin, typed adapters are
+provided for React (`@hitenpatel/strata/react`) and Vue
+(`@hitenpatel/strata/vue`) — see the dedicated docs pages in this section.

@@ -1,0 +1,80 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Docs/Using with Vue" />
+
+# Using Strata with Vue
+
+Vue 3 has [first-class support for custom elements](https://vuejs.org/guide/extras/web-components.html),
+so Strata needs no wrapper layer — `@hitenpatel/strata/vue` provides element
+registration, a small plugin, and TypeScript template typings.
+
+```bash
+npm install @hitenpatel/strata vue
+```
+
+## 1. Tell the compiler about `<strata-*>` tags
+
+In `vite.config.ts`, so Vue treats them as custom elements instead of
+unresolved components:
+
+```ts
+import vue from '@vitejs/plugin-vue';
+import { isStrataElement } from '@hitenpatel/strata/vue';
+
+export default defineConfig({
+  plugins: [
+    vue({
+      template: {
+        compilerOptions: { isCustomElement: isStrataElement },
+      },
+    }),
+  ],
+});
+```
+
+## 2. Register the elements
+
+```ts
+import { createApp } from 'vue';
+import { Strata } from '@hitenpatel/strata/vue'; // importing registers all elements
+import '@hitenpatel/strata/tokens.css';
+
+createApp(App).use(Strata).mount('#app');
+```
+
+The `use(Strata)` call is only required if you compile templates in the
+browser; the import alone registers every element.
+
+## 3. Use in templates
+
+```vue
+<template>
+  <strata-input
+    label="Email"
+    :value="email"
+    :error="error"
+    @input="email = $event.target.value"
+  />
+
+  <!-- .prop forces property binding for arrays/objects -->
+  <strata-select label="Plan" :options.prop="plans" :value="plan" @change="onPlan" />
+
+  <strata-pagination :page="page" :total="12" @page-change="page = $event.detail.page" />
+
+  <strata-button variant="primary" :loading="saving" @click="save">
+    Save changes
+  </strata-button>
+</template>
+```
+
+Notes:
+
+- Bind arrays/objects with the [`.prop` modifier](https://vuejs.org/guide/extras/web-components.html#passing-dom-properties)
+  (`:options.prop="…"`) so Vue sets a DOM property, not a stringified attribute.
+  Vue automatically property-binds when the element has a matching property,
+  but `.prop` makes it explicit and reliable.
+- Custom events work with plain `@` listeners: `@page-change`, `@select`,
+  `@strata-dismiss`; payloads arrive on `$event.detail`.
+- Template type-checking: importing `@hitenpatel/strata/vue` anywhere in the
+  project augments Vue's `GlobalComponents`, so Volar autocompletes every
+  `<strata-*>` tag and its props.

@@ -1,0 +1,79 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Docs/Using with React" />
+
+# Using Strata with React
+
+`@hitenpatel/strata/react` exports typed wrappers built with the official
+[`@lit/react`](https://lit.dev/docs/frameworks/react/) `createComponent`.
+Wrappers set rich values (arrays, objects, booleans) as DOM **properties**
+rather than attributes, and map custom events to `onXxx` props — the two
+things plain custom elements in React get wrong before React 19.
+
+```bash
+npm install @hitenpatel/strata react react-dom
+```
+
+```tsx
+import { Button, Input, Pagination, Dialog } from '@hitenpatel/strata/react';
+import '@hitenpatel/strata/tokens.css';
+
+export function Example() {
+  const [page, setPage] = useState(1);
+
+  return (
+    <>
+      <Input
+        label="Email"
+        value={email}
+        error={error}
+        onInput={(e) => setEmail((e.target as HTMLInputElement).value)}
+      />
+
+      <Pagination
+        page={page}
+        total={12}
+        onPageChange={(e) => setPage(e.detail.page)}
+      />
+
+      <Button variant="primary" loading={saving} onClick={save}>
+        Save changes
+      </Button>
+    </>
+  );
+}
+```
+
+## Event mapping
+
+| Wrapper prop   | DOM event        | Components |
+| -------------- | ---------------- | ---------- |
+| `onInput`      | `input`          | Input, Textarea |
+| `onChange`     | `change`         | Input, Textarea, Select, Checkbox, Radio, RadioGroup, Switch, Tabs |
+| `onSelect`     | `select`         | Menu (`e.detail.value`) |
+| `onPageChange` | `page-change`    | Pagination (`e.detail.page`) |
+| `onDismiss`    | `strata-dismiss` | Toast |
+| `onClose`      | `close`          | Dialog |
+
+Standard DOM events (`onClick`, `onFocus`, …) work as usual on every wrapper.
+
+## Children and slots
+
+React children become slotted light DOM. Use the `slot` attribute for named
+slots exactly as you would in HTML:
+
+```tsx
+<Card>
+  <h3 slot="header">Usage this month</h3>
+  Body content
+  <div slot="footer">
+    <Button variant="ghost">View invoice</Button>
+  </div>
+</Card>
+```
+
+## SSR note
+
+Wrappers render custom elements, which upgrade in the browser. With
+frameworks like Next.js, load Strata imports in client components
+(`'use client'`). Declarative shadow DOM SSR is not part of this package.
