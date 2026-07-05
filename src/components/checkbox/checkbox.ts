@@ -25,13 +25,13 @@ export class StrataCheckbox extends LitElement {
       gap: var(--strata-space-2, 8px);
       min-height: 40px;
       font-size: 14px;
-      color: var(--strata-text, #0f172a);
+      color: var(--strata-text, #231f1a);
       cursor: pointer;
       user-select: none;
     }
     :host([disabled]) label {
       cursor: not-allowed;
-      color: var(--strata-text-subtle, #94a3b8);
+      color: var(--strata-text-subtle, #8c8271);
     }
     input {
       position: absolute;
@@ -41,6 +41,7 @@ export class StrataCheckbox extends LitElement {
       opacity: 0;
       pointer-events: none;
     }
+    /* Sediment: a small raised slab that stamps down onto its shadow when checked */
     .box {
       display: inline-flex;
       align-items: center;
@@ -48,28 +49,41 @@ export class StrataCheckbox extends LitElement {
       width: 18px;
       height: 18px;
       flex: none;
-      border-radius: 5px;
-      border: 1.5px solid var(--strata-border-strong, #cbd5e1);
+      border-radius: var(--strata-radius-sm, 4px);
+      border: var(--strata-border-width, 1.5px) solid var(--strata-border-strong, #d6cec1);
       background: var(--strata-surface, #fff);
       color: var(--strata-on-accent, #fff);
       box-sizing: border-box;
+      box-shadow: 2px 2px 0 0 var(--strata-layer-shadow, #d6cec1);
       transition:
-        background-color var(--strata-duration-fast, 120ms) var(--strata-easing-default, ease),
-        border-color var(--strata-duration-fast, 120ms) var(--strata-easing-default, ease),
-        box-shadow var(--strata-duration-fast, 120ms) var(--strata-easing-default, ease);
+        background-color var(--strata-duration-fast, 120ms) var(--strata-easing-drop, ease),
+        border-color var(--strata-duration-fast, 120ms) var(--strata-easing-drop, ease),
+        transform var(--strata-duration-press, 90ms) var(--strata-easing-drop, ease),
+        box-shadow var(--strata-duration-press, 90ms) var(--strata-easing-drop, ease);
     }
     :host([checked]) .box,
     :host([indeterminate]) .box {
-      border-color: var(--strata-accent, #2563eb);
+      border-color: var(--strata-layer-shadow-accent, #1d4ed8);
       background: var(--strata-accent, #2563eb);
+      transform: translate(var(--strata-offset-1, 2px), var(--strata-offset-1, 2px));
+      box-shadow: 0 0 0 0 transparent;
     }
     :host([disabled]) .box {
-      border-color: var(--strata-border, #e2e8f0);
-      background: var(--strata-surface-sunken, #f1f5f9);
-      color: var(--strata-text-subtle, #94a3b8);
+      border-color: var(--strata-border, #e7e1d8);
+      background: var(--strata-surface-sunken, #f3efe9);
+      color: var(--strata-text-subtle, #8c8271);
       opacity: 0.6;
+      box-shadow: none;
+      transform: none;
     }
     input:focus-visible + .box {
+      box-shadow:
+        2px 2px 0 0 var(--strata-layer-shadow, #d6cec1),
+        0 0 0 2px var(--strata-surface, #fff),
+        0 0 0 4px var(--strata-focus-ring, #2563eb);
+    }
+    :host([checked]) input:focus-visible + .box,
+    :host([indeterminate]) input:focus-visible + .box {
       box-shadow:
         0 0 0 2px var(--strata-surface, #fff),
         0 0 0 4px var(--strata-focus-ring, #2563eb);
@@ -78,8 +92,10 @@ export class StrataCheckbox extends LitElement {
     .dash {
       display: none;
     }
+    /* Check stamps in: 1.15 -> 1 settle */
     :host([checked]:not([indeterminate])) .check {
       display: block;
+      animation: stamp 180ms var(--strata-easing-settle, cubic-bezier(0.22, 1.2, 0.36, 1));
     }
     :host([indeterminate]) .dash {
       display: block;
@@ -87,10 +103,27 @@ export class StrataCheckbox extends LitElement {
       height: 2.5px;
       background: currentColor;
       border-radius: 2px;
+      animation: stamp 180ms var(--strata-easing-settle, cubic-bezier(0.22, 1.2, 0.36, 1));
+    }
+    @keyframes stamp {
+      from {
+        transform: scale(1.15);
+      }
+      to {
+        transform: scale(1);
+      }
     }
     @media (prefers-reduced-motion: reduce) {
       .box {
         transition: none;
+      }
+      :host([checked]) .box,
+      :host([indeterminate]) .box {
+        transform: none;
+      }
+      .check,
+      .dash {
+        animation: none;
       }
     }
   `;

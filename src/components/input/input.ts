@@ -39,44 +39,65 @@ export class StrataInput extends LitElement {
     label {
       font-size: 13px;
       font-weight: 500;
-      color: var(--strata-text, #0f172a);
+      color: var(--strata-text, #231f1a);
     }
+    /* Sediment recessed bed: sunken fill + solid inset top edge from the layer above */
     input {
       height: 40px;
       padding: 0 var(--strata-space-3, 12px);
-      border-radius: var(--strata-radius-md, 10px);
-      border: 1px solid var(--strata-border-strong, #cbd5e1);
-      background: var(--strata-surface, #fff);
-      color: var(--strata-text, #0f172a);
+      border-radius: var(--strata-radius-md, 6px);
+      border: var(--strata-border-width, 1.5px) solid var(--strata-border-strong, #d6cec1);
+      background: var(--strata-surface-sunken, #f3efe9);
+      color: var(--strata-text, #231f1a);
       font-size: 14px;
       font-family: inherit;
       outline: none;
       width: 100%;
       box-sizing: border-box;
+      box-shadow: inset 0 2px 0 0 var(--strata-layer-edge-1, #d6cec1);
       transition:
-        border-color var(--strata-duration-fast, 120ms) var(--strata-easing-default, ease),
-        box-shadow var(--strata-duration-fast, 120ms) var(--strata-easing-default, ease);
+        border-color var(--strata-duration-fast, 120ms) var(--strata-easing-drop, ease),
+        background-color var(--strata-duration-fast, 120ms) var(--strata-easing-drop, ease),
+        box-shadow var(--strata-duration-fast, 120ms) var(--strata-easing-drop, ease);
     }
     input::placeholder {
-      color: var(--strata-text-subtle, #94a3b8);
+      color: var(--strata-text-subtle, #8c8271);
     }
+    /* Focus: border -> accent, 3px strata band reveals on the left, double-layer ring */
     input:focus-visible {
       border-color: var(--strata-accent, #2563eb);
-      box-shadow: 0 0 0 3px color-mix(in srgb, var(--strata-focus-ring, #2563eb) 30%, transparent);
+      box-shadow:
+        inset 3px 0 0 0 var(--strata-band-accent, #2563eb),
+        inset 0 2px 0 0 var(--strata-layer-edge-1, #d6cec1),
+        0 0 0 2px var(--strata-surface, #fff),
+        0 0 0 4px var(--strata-focus-ring, #2563eb);
     }
     input:disabled {
-      border-color: var(--strata-border, #e2e8f0);
-      background: var(--strata-surface-sunken, #f1f5f9);
-      color: var(--strata-text-subtle, #94a3b8);
+      border-color: var(--strata-border, #e7e1d8);
+      background: var(--strata-surface-sunken, #f3efe9);
+      color: var(--strata-text-subtle, #8c8271);
       cursor: not-allowed;
+      opacity: 0.7;
+      box-shadow: none;
     }
     :host([data-invalid]) input:not(:disabled) {
       border-color: var(--strata-danger, #dc2626);
-      background: var(--strata-danger-subtle, #fef2f2);
+      background: var(--strata-danger-subtle, #fdf0ee);
+      box-shadow:
+        inset 3px 0 0 0 var(--strata-band-danger, #dc2626),
+        inset 0 2px 0 0 var(--strata-layer-edge-1, #d6cec1);
+    }
+    :host([data-invalid]) input:not(:disabled):focus-visible {
+      border-color: var(--strata-danger, #dc2626);
+      box-shadow:
+        inset 3px 0 0 0 var(--strata-band-danger, #dc2626),
+        inset 0 2px 0 0 var(--strata-layer-edge-1, #d6cec1),
+        0 0 0 2px var(--strata-surface, #fff),
+        0 0 0 4px var(--strata-focus-ring, #2563eb);
     }
     .hint {
       font-size: 12px;
-      color: var(--strata-text-muted, #475569);
+      color: var(--strata-text-muted, #6a6153);
     }
     .error {
       display: inline-flex;

@@ -1,5 +1,5 @@
 import { LitElement, html, css, nothing } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, state } from 'lit/decorators.js';
 import { live } from 'lit/directives/live.js';
 
 export interface SelectOption {
@@ -19,6 +19,9 @@ export class StrataSelect extends LitElement {
   @property() error = '';
   @property() hint = '';
   @property() name = '';
+
+  /* Presentational only: drives the chevron rotation while the native picker is up */
+  @state() private pickerOpen = false;
 
   private internals: ElementInternals;
 
@@ -43,55 +46,88 @@ export class StrataSelect extends LitElement {
     label {
       font-size: 13px;
       font-weight: 500;
-      color: var(--strata-text, #0f172a);
+      color: var(--strata-text, #231f1a);
     }
     .control {
       position: relative;
       display: flex;
       align-items: center;
     }
+    /* Sediment recessed bed: sunken fill + solid inset top edge from the layer above */
     select {
       appearance: none;
       -webkit-appearance: none;
       height: 40px;
       width: 100%;
       padding: 0 36px 0 var(--strata-space-3, 12px);
-      border-radius: var(--strata-radius-md, 10px);
-      border: 1px solid var(--strata-border-strong, #cbd5e1);
-      background: var(--strata-surface, #fff);
-      color: var(--strata-text, #0f172a);
+      border-radius: var(--strata-radius-md, 6px);
+      border: var(--strata-border-width, 1.5px) solid var(--strata-border-strong, #d6cec1);
+      background: var(--strata-surface-sunken, #f3efe9);
+      color: var(--strata-text, #231f1a);
       font-size: 14px;
       font-family: inherit;
       outline: none;
       cursor: pointer;
       box-sizing: border-box;
+      box-shadow: inset 0 2px 0 0 var(--strata-layer-edge-1, #d6cec1);
       transition:
-        border-color var(--strata-duration-fast, 120ms) var(--strata-easing-default, ease),
-        box-shadow var(--strata-duration-fast, 120ms) var(--strata-easing-default, ease);
+        border-color var(--strata-duration-fast, 120ms) var(--strata-easing-drop, ease),
+        background-color var(--strata-duration-fast, 120ms) var(--strata-easing-drop, ease),
+        box-shadow var(--strata-duration-fast, 120ms) var(--strata-easing-drop, ease);
     }
+    /* Focus: border -> accent, 3px strata band reveals on the left, double-layer ring */
     select:focus-visible {
       border-color: var(--strata-accent, #2563eb);
-      box-shadow: 0 0 0 3px color-mix(in srgb, var(--strata-focus-ring, #2563eb) 30%, transparent);
+      box-shadow:
+        inset 3px 0 0 0 var(--strata-band-accent, #2563eb),
+        inset 0 2px 0 0 var(--strata-layer-edge-1, #d6cec1),
+        0 0 0 2px var(--strata-surface, #fff),
+        0 0 0 4px var(--strata-focus-ring, #2563eb);
     }
     select:disabled {
-      border-color: var(--strata-border, #e2e8f0);
-      background: var(--strata-surface-sunken, #f1f5f9);
-      color: var(--strata-text-subtle, #94a3b8);
+      border-color: var(--strata-border, #e7e1d8);
+      background: var(--strata-surface-sunken, #f3efe9);
+      color: var(--strata-text-subtle, #8c8271);
       cursor: not-allowed;
+      opacity: 0.7;
+      box-shadow: none;
     }
     :host([data-invalid]) select:not(:disabled) {
       border-color: var(--strata-danger, #dc2626);
-      background: var(--strata-danger-subtle, #fef2f2);
+      background: var(--strata-danger-subtle, #fdf0ee);
+      box-shadow:
+        inset 3px 0 0 0 var(--strata-band-danger, #dc2626),
+        inset 0 2px 0 0 var(--strata-layer-edge-1, #d6cec1);
     }
+    :host([data-invalid]) select:not(:disabled):focus-visible {
+      border-color: var(--strata-danger, #dc2626);
+      box-shadow:
+        inset 3px 0 0 0 var(--strata-band-danger, #dc2626),
+        inset 0 2px 0 0 var(--strata-layer-edge-1, #d6cec1),
+        0 0 0 2px var(--strata-surface, #fff),
+        0 0 0 4px var(--strata-focus-ring, #2563eb);
+    }
+    /* Native listbox popup cannot be styled; the floating-slab treatment
+       (var(--strata-shadow-md) + 1.5px border + radius-lg) lives in the menu
+       component the design reuses for custom listboxes. */
     .chevron {
       position: absolute;
       right: var(--strata-space-3, 12px);
-      color: var(--strata-text-subtle, #94a3b8);
+      color: var(--strata-text-subtle, #8c8271);
       pointer-events: none;
+      transition: transform var(--strata-duration-base, 200ms)
+        var(--strata-easing-settle, cubic-bezier(0.22, 1.2, 0.36, 1));
+    }
+    .chevron.open {
+      transform: rotate(180deg);
+      color: var(--strata-accent, #2563eb);
+    }
+    select:focus-visible ~ .chevron {
+      color: var(--strata-accent, #2563eb);
     }
     .hint {
       font-size: 12px;
-      color: var(--strata-text-muted, #475569);
+      color: var(--strata-text-muted, #6a6153);
     }
     .error {
       display: inline-flex;
@@ -101,7 +137,8 @@ export class StrataSelect extends LitElement {
       color: var(--strata-danger, #dc2626);
     }
     @media (prefers-reduced-motion: reduce) {
-      select {
+      select,
+      .chevron {
         transition: none;
       }
     }
@@ -111,7 +148,25 @@ export class StrataSelect extends LitElement {
     const target = e.target as HTMLSelectElement;
     this.value = target.value;
     this.internals.setFormValue(this.value);
+    this.pickerOpen = false;
     this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
+  }
+
+  private onPointerDown() {
+    if (!this.disabled) this.pickerOpen = !this.pickerOpen;
+  }
+
+  private onKeyDown(e: KeyboardEvent) {
+    if (this.disabled) return;
+    if (e.key === 'Escape') {
+      this.pickerOpen = false;
+    } else if (e.key === ' ' || e.key === 'Enter' || (e.altKey && (e.key === 'ArrowDown' || e.key === 'ArrowUp'))) {
+      this.pickerOpen = true;
+    }
+  }
+
+  private onBlur() {
+    this.pickerOpen = false;
   }
 
   protected willUpdate(changed: Map<string, unknown>) {
@@ -156,6 +211,9 @@ export class StrataSelect extends LitElement {
             aria-describedby=${describedBy}
             .value=${live(this.value)}
             @change=${this.onChange}
+            @pointerdown=${this.onPointerDown}
+            @keydown=${this.onKeyDown}
+            @blur=${this.onBlur}
           >
             ${this.options.map(
               (opt) =>
@@ -165,7 +223,7 @@ export class StrataSelect extends LitElement {
             )}
           </select>
           <svg
-            class="chevron"
+            class="chevron ${this.pickerOpen ? 'open' : ''}"
             width="16"
             height="16"
             viewBox="0 0 24 24"

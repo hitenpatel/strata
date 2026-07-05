@@ -17,8 +17,8 @@ export class StrataTable extends LitElement {
     :host {
       display: block;
       background: var(--strata-surface, #fff);
-      border: 1px solid var(--strata-border, #e2e8f0);
-      border-radius: var(--strata-radius-lg, 14px);
+      border: 1px solid var(--strata-border, #e7e1d8);
+      border-radius: var(--strata-radius-lg, 8px);
       overflow: hidden;
       font-family: var(--strata-font-body, system-ui, sans-serif);
     }
@@ -30,32 +30,32 @@ export class StrataTable extends LitElement {
       border-collapse: collapse;
       font-size: 14px;
     }
+    /* Sediment: the header row is a lower stratum — sunken fill, overline type */
     th {
       text-align: left;
-      padding: var(--strata-space-3, 12px) var(--strata-space-4, 16px);
-      background: var(--strata-surface-sunken, #f1f5f9);
-      border-bottom: 1px solid var(--strata-border, #e2e8f0);
-      color: var(--strata-text-muted, #475569);
-      font-size: 12px;
+      padding: 11px var(--strata-space-4, 16px);
+      background: var(--strata-surface-sunken, #f3efe9);
+      border-bottom: 1px solid var(--strata-border, #e7e1d8);
+      color: var(--strata-text-muted, #6a6153);
+      font-size: 12.5px;
       font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.01em;
       white-space: nowrap;
     }
     td {
-      padding: var(--strata-space-3, 12px) var(--strata-space-4, 16px);
-      color: var(--strata-text, #0f172a);
+      padding: 13px var(--strata-space-4, 16px);
+      color: var(--strata-text, #231f1a);
     }
     tbody tr {
-      border-bottom: 1px solid var(--strata-border, #e2e8f0);
+      border-bottom: 1px solid var(--strata-border, #e7e1d8);
       transition: background-color var(--strata-duration-fast, 120ms)
-        var(--strata-easing-default, ease);
+        var(--strata-easing-drop, ease);
     }
     tbody tr:last-child {
       border-bottom: none;
     }
     tbody tr:hover {
-      background: var(--strata-surface-hover, #f8fafc);
+      background: var(--strata-surface-hover, #faf8f5);
     }
     th.align-right,
     td.align-right {
@@ -65,7 +65,7 @@ export class StrataTable extends LitElement {
     .empty {
       padding: var(--strata-space-6, 32px) var(--strata-space-4, 16px);
       text-align: center;
-      color: var(--strata-text-subtle, #64748b);
+      color: var(--strata-text-muted, #6a6153);
     }
     @media (prefers-reduced-motion: reduce) {
       tbody tr {

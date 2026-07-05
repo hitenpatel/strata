@@ -11,34 +11,48 @@ export class StrataTab extends LitElement {
 
   static styles = css`
     :host {
+      /* Sediment: inactive tabs lie flat on the sunken strip */
       display: inline-flex;
       align-items: center;
-      height: 42px;
-      padding: 0 var(--strata-space-4, 16px);
-      margin-bottom: -1px;
-      border-bottom: 2px solid transparent;
+      box-sizing: border-box;
+      height: 38px;
+      padding: 0 18px;
+      border: var(--strata-border-width, 1.5px) solid transparent;
+      border-radius: var(--strata-radius-sm, 4px);
+      background: transparent;
       font-family: var(--strata-font-body, system-ui, sans-serif);
       font-size: 14px;
       font-weight: 600;
-      color: var(--strata-text-muted, #475569);
+      letter-spacing: -0.01em;
+      color: var(--strata-text-muted, #6a6153);
       cursor: pointer;
       user-select: none;
       white-space: nowrap;
       outline: none;
       transition:
-        color var(--strata-duration-fast, 120ms) var(--strata-easing-default, ease),
-        border-color var(--strata-duration-base, 200ms) var(--strata-easing-default, ease);
+        color var(--strata-duration-fast, 120ms) var(--strata-easing-drop, ease),
+        background-color 180ms var(--strata-easing-settle, ease),
+        border-color 180ms var(--strata-easing-settle, ease),
+        box-shadow 180ms var(--strata-easing-settle, ease);
     }
     :host(:hover) {
-      color: var(--strata-text, #0f172a);
+      color: var(--strata-text, #231f1a);
     }
+    /* The active tab is a raised slab lifted out of the strip */
     :host([selected]) {
-      color: var(--strata-accent, #2563eb);
-      border-bottom-color: var(--strata-accent, #2563eb);
+      color: var(--strata-text, #231f1a);
+      background: var(--strata-surface, #fff);
+      border-color: var(--strata-border-strong, #d6cec1);
+      box-shadow: 2px 2px 0 0 var(--strata-layer-shadow, #d6cec1);
     }
     :host(:focus-visible) {
-      border-radius: var(--strata-radius-sm, 6px) var(--strata-radius-sm, 6px) 0 0;
       box-shadow:
+        0 0 0 2px var(--strata-surface, #fff),
+        0 0 0 4px var(--strata-focus-ring, #2563eb);
+    }
+    :host([selected]:focus-visible) {
+      box-shadow:
+        2px 2px 0 0 var(--strata-layer-shadow, #d6cec1),
         0 0 0 2px var(--strata-surface, #fff),
         0 0 0 4px var(--strata-focus-ring, #2563eb);
     }
@@ -75,7 +89,7 @@ export class StrataTabPanel extends LitElement {
       font-family: var(--strata-font-body, system-ui, sans-serif);
       font-size: 14px;
       line-height: 1.6;
-      color: var(--strata-text, #0f172a);
+      color: var(--strata-text, #231f1a);
       outline: none;
     }
     :host([hidden]) {
@@ -111,10 +125,14 @@ export class StrataTabs extends LitElement {
       display: block;
       font-family: var(--strata-font-body, system-ui, sans-serif);
     }
+    /* Sediment: the tablist is a lower stratum — a sunken strip */
     [role='tablist'] {
-      display: flex;
-      gap: var(--strata-space-1, 4px);
-      border-bottom: 1px solid var(--strata-border, #e2e8f0);
+      display: inline-flex;
+      gap: 0;
+      padding: var(--strata-space-1, 4px);
+      background: var(--strata-surface-sunken, #f3efe9);
+      border: var(--strata-border-width, 1.5px) solid var(--strata-border-strong, #d6cec1);
+      border-radius: var(--strata-radius-md, 6px);
       margin-bottom: var(--strata-space-5, 24px);
     }
   `;

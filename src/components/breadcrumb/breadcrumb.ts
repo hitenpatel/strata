@@ -29,14 +29,13 @@ export class StrataBreadcrumb extends LitElement {
       font-size: 14px;
     }
     a {
-      color: var(--strata-text-muted, #475569);
+      color: var(--strata-text-muted, #6a6153);
       text-decoration: none;
-      border-radius: var(--strata-radius-sm, 6px);
-      transition: color var(--strata-duration-fast, 120ms) var(--strata-easing-default, ease);
+      border-radius: var(--strata-radius-sm, 4px);
+      transition: color var(--strata-duration-fast, 120ms) var(--strata-easing-drop, ease);
     }
     a:hover {
-      color: var(--strata-text, #0f172a);
-      text-decoration: underline;
+      color: var(--strata-accent, #2563eb);
     }
     a:focus-visible {
       outline: none;
@@ -45,12 +44,14 @@ export class StrataBreadcrumb extends LitElement {
         0 0 0 4px var(--strata-focus-ring, #2563eb);
     }
     .separator {
-      color: var(--strata-text-subtle, #64748b);
+      color: var(--strata-text-subtle, #8c8271);
       user-select: none;
     }
+    /* Current page: a mini stratum — 3px accent band offset below the text */
     [aria-current='page'] {
-      color: var(--strata-text, #0f172a);
+      color: var(--strata-text, #231f1a);
       font-weight: 600;
+      box-shadow: 0 5px 0 -2px var(--strata-band-accent, #2563eb);
     }
     @media (prefers-reduced-motion: reduce) {
       a {

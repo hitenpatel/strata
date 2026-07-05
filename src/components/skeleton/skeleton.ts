@@ -11,22 +11,19 @@ export class StrataSkeleton extends LitElement {
 
   static styles = css`
     :host {
+      /* Sediment layered loading: a neutral base slab with a gradient
+         sweep sliding across it (sediment shifting). */
       display: block;
-      background: linear-gradient(
-        90deg,
-        var(--strata-surface-sunken, #f1f5f9) 25%,
-        var(--strata-border, #e2e8f0) 50%,
-        var(--strata-surface-sunken, #f1f5f9) 75%
-      );
-      background-size: 200% 100%;
-      animation: shimmer 1.4s linear infinite;
+      position: relative;
+      overflow: hidden;
+      background: var(--strata-border, #e7e1d8);
     }
     :host([hidden]) {
       display: none;
     }
     :host([variant='text']) {
       height: 12px;
-      border-radius: var(--strata-radius-sm, 6px);
+      border-radius: var(--strata-radius-sm, 4px);
     }
     :host([variant='circle']) {
       width: 48px;
@@ -35,14 +32,25 @@ export class StrataSkeleton extends LitElement {
     }
     :host([variant='rect']) {
       height: 80px;
-      border-radius: var(--strata-radius-md, 10px);
+      border-radius: var(--strata-radius-md, 6px);
     }
-    @keyframes shimmer {
+    .sweep {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.35),
+        transparent
+      );
+      animation: strata-shimmer 1.5s var(--strata-easing-drop, ease) infinite;
+    }
+    @keyframes strata-shimmer {
       0% {
-        background-position: 200% 0;
+        transform: translateX(-60%);
       }
       100% {
-        background-position: -200% 0;
+        transform: translateX(160%);
       }
     }
     @keyframes pulse {
@@ -55,8 +63,12 @@ export class StrataSkeleton extends LitElement {
       }
     }
     @media (prefers-reduced-motion: reduce) {
+      /* Shimmer sweep replaced by a gentle opacity pulse on the slab. */
+      .sweep {
+        animation: none;
+        opacity: 0.5;
+      }
       :host {
-        background: var(--strata-surface-sunken, #f1f5f9);
         animation: pulse 1.4s var(--strata-easing-default, ease) infinite;
       }
     }
@@ -77,7 +89,8 @@ export class StrataSkeleton extends LitElement {
   }
 
   render() {
-    return html``;
+    // Purely presentational sweep layer; the host is aria-hidden.
+    return html`<span class="sweep"></span>`;
   }
 }
 

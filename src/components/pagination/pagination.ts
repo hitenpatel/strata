@@ -25,23 +25,26 @@ export class StrataPagination extends LitElement {
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      box-sizing: border-box;
       min-width: 40px;
       height: 40px;
       padding: 0 var(--strata-space-2, 8px);
-      border-radius: var(--strata-radius-md, 10px);
-      border: 1px solid var(--strata-border-strong, #cbd5e1);
+      border-radius: var(--strata-radius-md, 6px);
+      border: var(--strata-border-width, 1.5px) solid var(--strata-border-strong, #d6cec1);
       background: var(--strata-surface, #fff);
-      color: var(--strata-text, #0f172a);
+      color: var(--strata-text, #231f1a);
       font-family: var(--strata-font-body, system-ui, sans-serif);
       font-size: 14px;
       font-weight: 500;
       cursor: pointer;
       transition:
-        background-color var(--strata-duration-fast, 120ms) var(--strata-easing-default, ease),
-        border-color var(--strata-duration-fast, 120ms) var(--strata-easing-default, ease);
+        background-color var(--strata-duration-fast, 120ms) var(--strata-easing-drop, ease),
+        border-color var(--strata-duration-fast, 120ms) var(--strata-easing-drop, ease),
+        box-shadow 180ms var(--strata-easing-settle, ease),
+        transform 180ms var(--strata-easing-settle, ease);
     }
     button:hover:not(:disabled):not([aria-current='page']) {
-      background: var(--strata-surface-hover, #f8fafc);
+      background: var(--strata-surface-hover, #faf8f5);
     }
     button:focus-visible {
       outline: none;
@@ -53,24 +56,43 @@ export class StrataPagination extends LitElement {
       opacity: 0.42;
       cursor: not-allowed;
     }
+    /* Sediment: the current page is a mini raised slab at offset-1 */
     button[aria-current='page'] {
       background: var(--strata-accent, #2563eb);
-      border-color: transparent;
+      border-color: var(--strata-layer-shadow-accent, #1d4ed8);
       color: var(--strata-on-accent, #fff);
       font-weight: 600;
+      box-shadow: 2px 2px 0 0 var(--strata-layer-shadow-accent, #1d4ed8);
+    }
+    button[aria-current='page']:focus-visible {
+      box-shadow:
+        2px 2px 0 0 var(--strata-layer-shadow-accent, #1d4ed8),
+        0 0 0 2px var(--strata-surface, #fff),
+        0 0 0 4px var(--strata-focus-ring, #2563eb);
+    }
+    /* Press = the slab drops onto its shadow */
+    button:active:not(:disabled) {
+      transition:
+        transform var(--strata-duration-press, 90ms) var(--strata-easing-drop, ease),
+        box-shadow var(--strata-duration-press, 90ms) var(--strata-easing-drop, ease);
+      transform: translate(var(--strata-offset-1, 2px), var(--strata-offset-1, 2px));
+      box-shadow: 0 0 0 0 transparent;
     }
     .arrow {
-      color: var(--strata-text-muted, #475569);
+      color: var(--strata-text-muted, #6a6153);
     }
     .ellipsis {
       min-width: var(--strata-space-6, 32px);
       text-align: center;
-      color: var(--strata-text-subtle, #64748b);
+      color: var(--strata-text-subtle, #8c8271);
       user-select: none;
     }
     @media (prefers-reduced-motion: reduce) {
       button {
         transition: none;
+      }
+      button:active:not(:disabled) {
+        transform: none;
       }
     }
   `;

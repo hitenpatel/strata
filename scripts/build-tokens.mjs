@@ -34,7 +34,7 @@ function flattenPrimitives(obj, path = []) {
   return out;
 }
 
-const primitiveGroups = ['color', 'font', 'space', 'radius', 'duration', 'easing', 'shadow'];
+const primitiveGroups = ['color', 'font', 'space', 'radius', 'offset', 'border', 'duration', 'easing'];
 const primitives = primitiveGroups.flatMap((g) => flattenPrimitives(tokens[g], [g]));
 
 const semanticVars = (set) =>

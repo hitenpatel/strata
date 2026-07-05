@@ -11,6 +11,22 @@ and Vue.
 - **Source**: [github.com/hitenpatel/strata](https://github.com/hitenpatel/strata)
 - **Package**: `@hitenpatel/strata`
 
+## Visual language: Sediment
+
+Strata = layers of sediment. Every element is a slab of material resting on
+the strata beneath it — nothing floats, nothing glows, nothing blurs:
+
+- **Solid offset shadows, never blur.** Elevation is a hard shadow offset
+  down-right, coloured by the element's own material.
+- **Echoed under-edges.** Cards, menus and dialogs show the lower layers
+  peeking out beneath — a strata cross-section.
+- **Strata bands.** A 3px band on the left edge carries tone: toast severity,
+  active menu items, input focus.
+- **Crisp 1.5px borders** on every interactive slab.
+- **Motion = settle.** Pressing drops a slab onto its shadow; layers slide in
+  and settle with a tiny overshoot. All motion respects
+  `prefers-reduced-motion`.
+
 ## Installation
 
 ```bash
@@ -32,10 +48,10 @@ Tokens live in a single [W3C Design Tokens](https://design-tokens.github.io/comm
 file and compile to CSS custom properties in two tiers:
 
 1. **Primitives** — raw scales: colour ramps (`--strata-color-blue-600`),
-   spacing (`--strata-space-4`), radii, shadows, motion.
+   spacing (`--strata-space-4`), radii, elevation offsets, motion.
 2. **Semantic** — role-based aliases components actually consume:
    `--strata-surface`, `--strata-text-muted`, `--strata-accent`,
-   `--strata-danger-subtle`, `--strata-focus-ring`…
+   `--strata-layer-shadow`, `--strata-band-danger`, `--strata-focus-ring`…
 
 Components only ever reference semantic tokens, which is what makes theming
 free.

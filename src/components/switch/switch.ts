@@ -25,7 +25,7 @@ export class StrataSwitch extends LitElement {
       background: transparent;
       font-family: inherit;
       font-size: 14px;
-      color: var(--strata-text, #0f172a);
+      color: var(--strata-text, #231f1a);
       cursor: pointer;
       user-select: none;
     }
@@ -39,8 +39,9 @@ export class StrataSwitch extends LitElement {
     }
     button:disabled {
       cursor: not-allowed;
-      color: var(--strata-text-subtle, #94a3b8);
+      color: var(--strata-text-subtle, #8c8271);
     }
+    /* Sediment: recessed channel; the thumb is a mini slab that slides and settles */
     .track {
       display: inline-flex;
       align-items: center;
@@ -48,41 +49,56 @@ export class StrataSwitch extends LitElement {
       height: 24px;
       flex: none;
       border-radius: var(--strata-radius-full, 999px);
-      background: var(--strata-border-strong, #cbd5e1);
+      background: var(--strata-surface-sunken, #f3efe9);
+      border: var(--strata-border-width, 1.5px) solid var(--strata-border-strong, #d6cec1);
       padding: 2px;
       box-sizing: border-box;
-      transition: background-color var(--strata-duration-base, 200ms)
-        var(--strata-easing-default, ease);
+      transition:
+        background-color var(--strata-duration-base, 200ms) var(--strata-easing-drop, ease),
+        border-color var(--strata-duration-base, 200ms) var(--strata-easing-drop, ease);
     }
     .thumb {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
+      box-sizing: border-box;
       border-radius: var(--strata-radius-full, 999px);
       background: var(--strata-surface, #fff);
-      box-shadow: var(--strata-shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.1));
+      border: var(--strata-border-width, 1.5px) solid var(--strata-border-strong, #d6cec1);
+      box-shadow: 2px 2px 0 0 var(--strata-layer-shadow, #d6cec1);
       transform: translateX(0);
-      transition: transform var(--strata-duration-base, 200ms) var(--strata-easing-default, ease);
+      transition:
+        transform var(--strata-duration-base, 200ms)
+          var(--strata-easing-settle, cubic-bezier(0.22, 1.2, 0.36, 1)),
+        border-color var(--strata-duration-base, 200ms) var(--strata-easing-drop, ease),
+        box-shadow var(--strata-duration-base, 200ms) var(--strata-easing-drop, ease);
     }
     :host([checked]) .track {
       background: var(--strata-accent, #2563eb);
+      border-color: var(--strata-layer-shadow-accent, #1d4ed8);
     }
     :host([checked]) .thumb {
       transform: translateX(16px);
+      border-color: var(--strata-layer-shadow-accent, #1d4ed8);
+      box-shadow: 2px 2px 0 0 var(--strata-layer-shadow-accent, #1d4ed8);
     }
     :host([disabled]) .track {
-      background: var(--strata-border, #e2e8f0);
+      background: var(--strata-surface-sunken, #f3efe9);
+      border-color: var(--strata-border, #e7e1d8);
       opacity: 0.55;
     }
     :host([disabled]) .thumb {
-      box-shadow: var(--strata-shadow-xs, 0 1px 1px rgba(0, 0, 0, 0.06));
+      border-color: var(--strata-border, #e7e1d8);
+      box-shadow: none;
     }
+    :host([disabled][checked]) .track {
+      background: var(--strata-accent, #2563eb);
+    }
+    /* Reduced motion: position change is instant, colour still crossfades */
     @media (prefers-reduced-motion: reduce) {
-      .track {
-        transition: background-color var(--strata-duration-base, 200ms)
-          var(--strata-easing-default, ease);
-      }
       .thumb {
-        transition: none;
+        transition:
+          border-color var(--strata-duration-base, 200ms) var(--strata-easing-drop, ease),
+          box-shadow var(--strata-duration-base, 200ms) var(--strata-easing-drop, ease);
       }
     }
   `;

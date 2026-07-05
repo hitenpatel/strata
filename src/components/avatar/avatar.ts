@@ -22,12 +22,22 @@ export class StrataAvatar extends LitElement {
       align-items: center;
       justify-content: center;
       overflow: hidden;
+      box-sizing: border-box;
       border-radius: var(--strata-radius-full, 999px);
-      background: var(--strata-accent-subtle, #eff6ff);
+      /* Sediment: every disc is a slab edge — crisp 1.5px border. */
+      border: var(--strata-border-width, 1.5px) solid
+        var(--strata-border-strong, #d6cec1);
+      background: var(--strata-accent-subtle, #eef4ff);
       color: var(--strata-accent, #2563eb);
       font-family: var(--strata-font-body, system-ui, sans-serif);
       font-weight: 600;
       user-select: none;
+    }
+    /* Layered-disc stacking: when avatars are overlapped by the consumer
+       (negative margins), each disc separates from the one beneath it with
+       a 2px surface-colour ring. */
+    :host(:not(:first-of-type)) .avatar {
+      box-shadow: 0 0 0 2px var(--strata-surface, #fff);
     }
     img {
       display: block;

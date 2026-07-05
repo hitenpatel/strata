@@ -13,32 +13,47 @@ export class StrataMenuItem extends LitElement {
       align-items: center;
       gap: var(--strata-space-2, 8px);
       padding: var(--strata-space-2, 8px) var(--strata-space-3, 12px);
-      border-radius: var(--strata-radius-sm, 6px);
+      border-radius: var(--strata-radius-sm, 4px);
       font-family: var(--strata-font-body, system-ui, sans-serif);
       font-size: 14px;
-      color: var(--strata-text, #0f172a);
+      color: var(--strata-text, #231f1a);
       cursor: pointer;
       user-select: none;
       white-space: nowrap;
       outline: none;
-      transition: background-color var(--strata-duration-fast, 120ms)
-        var(--strata-easing-default, ease);
+      transition:
+        background-color var(--strata-duration-fast, 120ms) var(--strata-easing-drop, ease),
+        box-shadow var(--strata-duration-fast, 120ms) var(--strata-easing-drop, ease);
     }
-    :host(:hover),
+    :host(:hover) {
+      background: var(--strata-surface-hover, #faf8f5);
+    }
+    /* Active (focused) item: accent-subtle fill + the 3px strata band */
     :host(:focus) {
-      background: var(--strata-surface-hover, #f8fafc);
+      background: var(--strata-accent-subtle, #eef4ff);
+      box-shadow: inset 3px 0 0 0 var(--strata-band-accent, #2563eb);
     }
     :host(:focus-visible) {
       box-shadow:
+        inset 3px 0 0 0 var(--strata-band-accent, #2563eb),
         0 0 0 2px var(--strata-surface, #fff),
         0 0 0 4px var(--strata-focus-ring, #2563eb);
     }
     :host([danger]) {
       color: var(--strata-danger, #dc2626);
     }
-    :host([danger]:hover),
+    :host([danger]:hover) {
+      background: var(--strata-danger-subtle, #fdf0ee);
+    }
     :host([danger]:focus) {
-      background: var(--strata-danger-subtle, #fef2f2);
+      background: var(--strata-danger-subtle, #fdf0ee);
+      box-shadow: inset 3px 0 0 0 var(--strata-band-danger, #dc2626);
+    }
+    :host([danger]:focus-visible) {
+      box-shadow:
+        inset 3px 0 0 0 var(--strata-band-danger, #dc2626),
+        0 0 0 2px var(--strata-surface, #fff),
+        0 0 0 4px var(--strata-focus-ring, #2563eb);
     }
     @media (prefers-reduced-motion: reduce) {
       :host {
@@ -67,6 +82,7 @@ export class StrataMenu extends LitElement {
       display: inline-block;
       position: relative;
     }
+    /* Sediment: the menu is a floating slab — offset-2 shadow + one echoed under-edge */
     .popup {
       position: absolute;
       top: calc(100% + var(--strata-space-1, 4px));
@@ -75,27 +91,42 @@ export class StrataMenu extends LitElement {
       min-width: 200px;
       padding: var(--strata-space-1, 4px);
       background: var(--strata-surface-raised, #fff);
-      border: 1px solid var(--strata-border, #e2e8f0);
-      border-radius: var(--strata-radius-md, 10px);
-      box-shadow: var(--strata-shadow-md, 0 4px 12px rgba(15, 23, 42, 0.1));
-      animation: menu-in var(--strata-duration-fast, 120ms) var(--strata-easing-default, ease);
+      border: var(--strata-border-width, 1.5px) solid var(--strata-border-strong, #d6cec1);
+      border-radius: var(--strata-radius-lg, 8px);
+      box-shadow:
+        4px 4px 0 0 var(--strata-layer-shadow, #d6cec1),
+        0 5px 0 -1px var(--strata-layer-edge-1, #d6cec1);
+      animation: menu-settle var(--strata-duration-base, 200ms)
+        var(--strata-easing-settle, cubic-bezier(0.22, 1.2, 0.36, 1));
     }
     :host(:not([open])) .popup {
       display: none;
     }
-    @keyframes menu-in {
-      from {
+    /* Enters with a 4px drop + settle */
+    @keyframes menu-settle {
+      0% {
         opacity: 0;
         transform: translateY(-4px);
       }
-      to {
+      70% {
+        transform: translateY(1px);
+      }
+      100% {
         opacity: 1;
         transform: none;
       }
     }
+    @keyframes menu-fade {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
     @media (prefers-reduced-motion: reduce) {
       .popup {
-        animation: none;
+        animation: menu-fade var(--strata-duration-fast, 120ms) ease;
       }
     }
   `;

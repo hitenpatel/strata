@@ -18,7 +18,7 @@ export class StrataRadioGroup extends LitElement {
     .legend {
       font-size: 13px;
       font-weight: 500;
-      color: var(--strata-text, #0f172a);
+      color: var(--strata-text, #231f1a);
       margin-bottom: var(--strata-space-1, 4px);
     }
     .radios {

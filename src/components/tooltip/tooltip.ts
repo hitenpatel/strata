@@ -26,29 +26,35 @@ export class StrataTooltip extends LitElement {
     .tip {
       position: absolute;
       left: 50%;
-      transform: translateX(-50%);
+      /* Enters with a 4px settle from the anchor side (down = towards the
+         trigger for top placement); --_from is flipped per placement. */
+      transform: translateX(-50%) translateY(var(--_from, 4px));
       bottom: calc(100% + 10px);
       z-index: 10;
       white-space: nowrap;
       padding: 6px 10px;
-      border-radius: var(--strata-radius-sm, 6px);
-      background: var(--strata-text, #0f172a);
+      border-radius: var(--strata-radius-sm, 4px);
+      background: var(--strata-text, #231f1a);
       color: var(--strata-surface, #fff);
       font-family: var(--strata-font-body, system-ui, sans-serif);
       font-size: 12.5px;
       font-weight: 500;
       line-height: 1.4;
-      box-shadow: var(--strata-shadow-md, 0 4px 12px rgba(15, 23, 42, 0.1));
+      /* Small dark slab: offset-1 solid shadow in a dark shade, no echoed
+         under-edges (per spec — shadow-xs would read pale under n-900). */
+      box-shadow: 2px 2px 0 0 rgba(0, 0, 0, 0.25);
       opacity: 0;
       visibility: hidden;
       transition:
         opacity var(--strata-duration-fast, 120ms)
           var(--strata-easing-default, ease),
+        transform 180ms var(--strata-easing-settle, ease),
         visibility var(--strata-duration-fast, 120ms);
     }
     .tip.open {
       opacity: 1;
       visibility: visible;
+      transform: translateX(-50%) translateY(0);
     }
     .arrow {
       position: absolute;
@@ -58,20 +64,23 @@ export class StrataTooltip extends LitElement {
     }
     :host([placement='top']) .arrow {
       top: 100%;
-      border-top-color: var(--strata-text, #0f172a);
+      border-top-color: var(--strata-text, #231f1a);
     }
     :host([placement='bottom']) .tip {
       bottom: auto;
       top: calc(100% + 10px);
+      --_from: -4px;
     }
     :host([placement='bottom']) .arrow {
       top: auto;
       bottom: 100%;
-      border-bottom-color: var(--strata-text, #0f172a);
+      border-bottom-color: var(--strata-text, #231f1a);
     }
     @media (prefers-reduced-motion: reduce) {
+      /* Opacity only — no movement. */
       .tip {
-        transition: none;
+        transition: opacity var(--strata-duration-fast, 120ms) ease;
+        transform: translateX(-50%) translateY(0);
       }
     }
   `;
