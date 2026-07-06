@@ -132,6 +132,11 @@ describe('strata-menu', () => {
     const el = await menuFixture();
     getTrigger(el).click();
     await el.updateComplete;
+    // wait out the open animation so axe measures settled opacity
+    const popup = el.shadowRoot!.querySelector('.popup');
+    await Promise.all(
+      (popup?.getAnimations({ subtree: true }) ?? []).map((a) => a.finished)
+    );
     await nextFrame();
     await expect(el).to.be.accessible();
   });
