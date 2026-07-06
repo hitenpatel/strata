@@ -39,16 +39,15 @@ export class StrataTextarea extends LitElement {
     label {
       font-size: 13px;
       font-weight: 500;
-      color: var(--strata-text, #231f1a);
+      color: var(--strata-text, #09090b);
     }
-    /* Sediment recessed bed: sunken fill + solid inset top edge from the layer above */
     textarea {
       min-height: 96px;
       padding: 10px var(--strata-space-3, 12px);
       border-radius: var(--strata-radius-md, 6px);
-      border: var(--strata-border-width, 1.5px) solid var(--strata-border-strong, #d6cec1);
-      background: var(--strata-surface-sunken, #f3efe9);
-      color: var(--strata-text, #231f1a);
+      border: var(--strata-border-width, 1px) solid var(--strata-border, #e4e4e7);
+      background: var(--strata-surface, #fff);
+      color: var(--strata-text, #09090b);
       font-size: 14px;
       font-family: inherit;
       line-height: 1.5;
@@ -56,50 +55,34 @@ export class StrataTextarea extends LitElement {
       resize: vertical;
       width: 100%;
       box-sizing: border-box;
-      box-shadow: inset 0 2px 0 0 var(--strata-layer-edge-1, #d6cec1);
-      transition:
-        border-color var(--strata-duration-fast, 120ms) var(--strata-easing-drop, ease),
-        background-color var(--strata-duration-fast, 120ms) var(--strata-easing-drop, ease),
-        box-shadow var(--strata-duration-fast, 120ms) var(--strata-easing-drop, ease);
+      box-shadow: var(--strata-shadow-xs, 0 1px 2px 0 rgb(0 0 0 / 0.05));
+      transition: border-color var(--strata-duration-fast, 150ms)
+        var(--strata-easing-default, ease);
     }
     textarea::placeholder {
-      color: var(--strata-text-subtle, #8c8271);
+      color: var(--strata-text-muted, #71717a);
     }
-    /* Focus: border -> accent, 3px strata band reveals on the left, double-layer ring */
     textarea:focus-visible {
-      border-color: var(--strata-accent, #2563eb);
-      box-shadow:
-        inset 3px 0 0 0 var(--strata-band-accent, #2563eb),
-        inset 0 2px 0 0 var(--strata-layer-edge-1, #d6cec1),
-        0 0 0 2px var(--strata-surface, #fff),
-        0 0 0 4px var(--strata-focus-ring, #2563eb);
+      border-color: var(--strata-focus-ring, #2563eb);
+      outline: 2px solid var(--strata-focus-ring, #2563eb);
+      outline-offset: -1px;
     }
     textarea:disabled {
-      border-color: var(--strata-border, #e7e1d8);
-      background: var(--strata-surface-sunken, #f3efe9);
-      color: var(--strata-text-subtle, #8c8271);
+      background: var(--strata-surface-sunken, #f4f4f5);
+      color: var(--strata-text-muted, #71717a);
       cursor: not-allowed;
       opacity: 0.7;
       box-shadow: none;
     }
     :host([data-invalid]) textarea:not(:disabled) {
       border-color: var(--strata-danger, #dc2626);
-      background: var(--strata-danger-subtle, #fdf0ee);
-      box-shadow:
-        inset 3px 0 0 0 var(--strata-band-danger, #dc2626),
-        inset 0 2px 0 0 var(--strata-layer-edge-1, #d6cec1);
     }
     :host([data-invalid]) textarea:not(:disabled):focus-visible {
-      border-color: var(--strata-danger, #dc2626);
-      box-shadow:
-        inset 3px 0 0 0 var(--strata-band-danger, #dc2626),
-        inset 0 2px 0 0 var(--strata-layer-edge-1, #d6cec1),
-        0 0 0 2px var(--strata-surface, #fff),
-        0 0 0 4px var(--strata-focus-ring, #2563eb);
+      outline-color: var(--strata-danger, #dc2626);
     }
     .hint {
       font-size: 12px;
-      color: var(--strata-text-muted, #6a6153);
+      color: var(--strata-text-muted, #71717a);
     }
     .error {
       display: inline-flex;
@@ -156,9 +139,10 @@ export class StrataTextarea extends LitElement {
     const describedBy =
       [this.error ? 'error' : '', this.hint ? 'hint' : ''].filter(Boolean).join(' ') || nothing;
     return html`
-      <div class="field">
-        ${this.label ? html`<label for="control">${this.label}</label>` : nothing}
+      <div class="field" part="field">
+        ${this.label ? html`<label part="label" for="control">${this.label}</label>` : nothing}
         <textarea
+          part="textarea"
           id="control"
           rows=${this.rows}
           .value=${live(this.value)}
@@ -172,9 +156,13 @@ export class StrataTextarea extends LitElement {
           @change=${this.onChange}
         ></textarea>
         ${this.error
-          ? html`<span class="error" id="error">${this.renderErrorIcon()}${this.error}</span>`
+          ? html`<span class="error" part="error" id="error"
+              >${this.renderErrorIcon()}${this.error}</span
+            >`
           : nothing}
-        ${this.hint ? html`<span class="hint" id="hint">${this.hint}</span>` : nothing}
+        ${this.hint
+          ? html`<span class="hint" part="hint" id="hint">${this.hint}</span>`
+          : nothing}
       </div>
     `;
   }

@@ -1,0 +1,82 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Docs/Skins" />
+
+# Skins
+
+Skins are complete visual identities built **entirely from Strata's public
+theming surface** — design token overrides plus `::part()` rules in a single
+CSS file. No component code, no forks, no build step. They exist to prove the
+point made on the [Theming](?path=/docs/docs-theming--docs) page: the baseline
+is neutral because the styling belongs to you.
+
+Try one now: pick **Sediment** from the **Skin** dropdown in the toolbar
+above, then browse any component story. Switch theme to dark at the same
+time — skins compose with the built-in modes.
+
+## Using a skin
+
+Import the stylesheet and set the attribute:
+
+```js
+import '@hitenpatel/strata';
+import '@hitenpatel/strata/tokens.css';
+import '@hitenpatel/strata/themes/sediment.css';
+```
+
+```html
+<html data-strata-skin="sediment">
+<html data-strata-skin="sediment" data-theme="dark">
+```
+
+The attribute scopes every rule in the skin, so removing it (or setting it on
+a subtree instead of `<html>`) reverts to the baseline instantly.
+
+## Sediment
+
+Layers of warm, earthy material. Every element is a slab resting on the
+strata beneath it — nothing floats, nothing glows, nothing blurs:
+
+- **Solid offset shadows, never blur** — elevation is a hard shadow offset
+  down-right (`--strata-shadow-*` overrides).
+- **Echoed under-edges** — raised cards, menus and dialogs show lower layers
+  peeking out beneath.
+- **Strata bands** — a 3px tone edge on toasts
+  (`strata-toast[tone='danger']::part(toast)`).
+- **Crisp 1.5px borders** (`--strata-border-width`).
+- **Motion = settle** — buttons lift on hover and drop onto their shadow when
+  pressed (`::part(button):active`), with a settle-overshoot easing curve.
+
+Roughly the first half of the file is token overrides, the second half is
+`::part()` rules:
+
+```css
+[data-strata-skin='sediment'] {
+  --strata-canvas: #f3efe9;
+  --strata-border-width: 1.5px;
+  --strata-shadow-sm: 2px 2px 0 0 var(--sed-ink);
+  /* … */
+}
+
+[data-strata-skin='sediment']
+  strata-button:not([disabled]):not([loading])::part(button):active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 0 transparent;
+}
+```
+
+Source: [`themes/sediment.css`](https://github.com/hitenpatel/strata/blob/main/themes/sediment.css).
+
+## Writing your own
+
+1. Start a stylesheet scoped to your own attribute, e.g.
+   `[data-strata-skin="acme"]`.
+2. Override semantic tokens first — colour, radius, border width, shadows,
+   motion. This gets you 80% of the way.
+3. Add `::part()` rules for the details tokens can't express — per-variant
+   treatments, hover/press transforms, decorative edges. The full part
+   inventory is on the [Theming](?path=/docs/docs-theming--docs) page.
+4. Keep the accessibility contract: don't remove focus indicators (recolour
+   `--strata-focus-ring` instead), wrap added motion in
+   `@media (prefers-reduced-motion: no-preference)` or disable it under
+   `reduce`, and re-check contrast after swapping colours.

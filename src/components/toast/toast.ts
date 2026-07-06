@@ -55,11 +55,9 @@ export class StrataToast extends LitElement {
   static styles = css`
     :host {
       display: block;
-      /* Sediment slab: severity band + tone chip colours, overridden per
-         tone below. */
-      --_band: var(--strata-band-accent, #2563eb);
+      /* Severity is carried by the leading icon's tone colour only —
+         overridden per tone below. */
       --_tone: var(--strata-accent, #2563eb);
-      --_tone-subtle: var(--strata-accent-subtle, #eef4ff);
     }
     :host([hidden]) {
       display: none;
@@ -68,49 +66,35 @@ export class StrataToast extends LitElement {
       position: relative;
       display: flex;
       align-items: flex-start;
-      gap: 11px;
-      /* Extra left padding clears the 3px severity band. */
-      padding: 12px 14px 12px 17px;
+      gap: 10px;
+      padding: 12px 14px;
       border-radius: var(--strata-radius-lg, 8px);
-      background: var(--strata-surface-raised, #fff);
-      border: var(--strata-border-width, 1.5px) solid
-        var(--strata-border-strong, #d6cec1);
-      /* 3px strata band inset on the left, layered over the offset-2 solid
-         shadow + two echoed under-edges (composed in shadow-md). */
-      box-shadow:
-        inset 3px 0 0 0 var(--_band),
-        var(
-          --strata-shadow-md,
-          4px 4px 0 0 #d6cec1,
-          0 5px 0 -1px #d6cec1,
-          0 8px 0 -2px #e7e1d8
-        );
+      background: var(--strata-surface, #fff);
+      border: var(--strata-border-width, 1px) solid var(--strata-border, #e4e4e7);
+      box-shadow: var(
+        --strata-shadow-lg,
+        0 10px 15px -3px rgb(0 0 0 / 0.1),
+        0 4px 6px -4px rgb(0 0 0 / 0.1)
+      );
       font-family: var(--strata-font-body, system-ui, sans-serif);
-      animation: enter var(--strata-duration-slow, 320ms)
-        var(--strata-easing-settle, ease) both;
+      animation: enter var(--strata-duration-base, 200ms)
+        var(--strata-easing-out, ease-out) both;
     }
     .icon {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 22px;
-      height: 22px;
-      box-sizing: border-box;
-      border-radius: var(--strata-radius-sm, 4px);
-      border: var(--strata-border-width, 1.5px) solid var(--_tone);
-      background: var(--_tone-subtle);
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
       color: var(--_tone);
       flex: none;
     }
     :host([tone='success']) {
-      --_band: var(--strata-band-success, #16a34a);
       --_tone: var(--strata-success, #16a34a);
-      --_tone-subtle: var(--strata-success-subtle, #eefaf1);
     }
     :host([tone='danger']) {
-      --_band: var(--strata-band-danger, #dc2626);
       --_tone: var(--strata-danger, #dc2626);
-      --_tone-subtle: var(--strata-danger-subtle, #fdf0ee);
     }
     .body {
       flex: 1;
@@ -120,13 +104,13 @@ export class StrataToast extends LitElement {
     .heading {
       font-size: 13.5px;
       font-weight: 600;
-      color: var(--strata-text, #231f1a);
+      color: var(--strata-text, #09090b);
       margin-bottom: 2px;
     }
     .message {
       font-size: 13.5px;
-      font-weight: 500;
-      color: var(--strata-text, #231f1a);
+      font-weight: 400;
+      color: var(--strata-text, #09090b);
       line-height: 1.5;
     }
     .dismiss {
@@ -138,36 +122,31 @@ export class StrataToast extends LitElement {
       flex: none;
       padding: 0;
       border: none;
-      border-radius: var(--strata-radius-sm, 6px);
+      border-radius: var(--strata-radius-sm, 4px);
       background: transparent;
-      color: var(--strata-text-subtle, #8c8271);
+      color: var(--strata-text-muted, #71717a);
       cursor: pointer;
       transition:
-        background-color var(--strata-duration-fast, 120ms)
+        background-color var(--strata-duration-fast, 150ms)
           var(--strata-easing-default, ease),
-        color var(--strata-duration-fast, 120ms)
+        color var(--strata-duration-fast, 150ms)
           var(--strata-easing-default, ease);
     }
     .dismiss:hover {
-      background: var(--strata-surface-hover, #faf8f5);
-      color: var(--strata-text, #231f1a);
+      background: var(--strata-surface-hover, #f4f4f5);
+      color: var(--strata-text, #09090b);
     }
     .dismiss:focus-visible {
-      outline: none;
-      box-shadow:
-        0 0 0 2px var(--strata-surface, #fff),
-        0 0 0 4px var(--strata-focus-ring, #2563eb);
+      outline: 2px solid var(--strata-focus-ring, #2563eb);
+      outline-offset: 2px;
     }
-    /* Slide up from the region edge, overshoot 3px, settle on the pile. */
+    /* Slide up 8px + fade. */
     @keyframes enter {
-      0% {
+      from {
         opacity: 0;
-        transform: translateY(16px);
+        transform: translateY(8px);
       }
-      70% {
-        transform: translateY(-3px);
-      }
-      100% {
+      to {
         opacity: 1;
         transform: translateY(0);
       }
@@ -203,15 +182,15 @@ export class StrataToast extends LitElement {
 
   render() {
     return html`
-      <div class="toast" role=${this.tone === 'danger' ? 'alert' : 'status'}>
+      <div class="toast" part="toast" role=${this.tone === 'danger' ? 'alert' : 'status'}>
         <span class="icon">${icons[this.tone]}</span>
         <div class="body">
           ${this.heading
-            ? html`<div class="heading">${this.heading}</div>`
+            ? html`<div class="heading" part="heading">${this.heading}</div>`
             : nothing}
-          <div class="message"><slot></slot></div>
+          <div class="message" part="message"><slot></slot></div>
         </div>
-        <button class="dismiss" aria-label="Dismiss" @click=${this.onDismiss}>
+        <button class="dismiss" part="dismiss" aria-label="Dismiss" @click=${this.onDismiss}>
           <svg
             width="12"
             height="12"

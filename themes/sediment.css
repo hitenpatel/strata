@@ -1,0 +1,202 @@
+/**
+ * Sediment — an example Strata skin.
+ *
+ * Layered slabs of warm, earthy material: solid offset shadows (never blur),
+ * echoed under-edges, crisp 1.5px borders, and press interactions that drop
+ * a slab onto its shadow. Built entirely from the two public theming layers —
+ * design token overrides and ::part() rules. No component code involved.
+ *
+ * Usage:
+ *   import '@hitenpatel/strata/themes/sediment.css';
+ *   <html data-strata-skin="sediment">
+ *
+ * Composes with the built-in modes:
+ *   <html data-strata-skin="sediment" data-theme="dark">
+ */
+
+/* ---------------------------------------------------------------- tokens */
+
+[data-strata-skin='sediment'] {
+  /* skin-private properties */
+  --sed-ink: #d6cec1;
+  --sed-ink-accent: #1d4ed8;
+  --sed-ink-danger: #b91c1c;
+  --sed-edge-1: #d6cec1;
+  --sed-edge-2: #e7e1d8;
+
+  /* warm beige neutrals */
+  --strata-canvas: #f3efe9;
+  --strata-surface: #ffffff;
+  --strata-surface-raised: #ffffff;
+  --strata-surface-sunken: #f3efe9;
+  --strata-surface-hover: #faf8f5;
+  --strata-border: #e7e1d8;
+  --strata-border-strong: #d6cec1;
+  --strata-text: #231f1a;
+  --strata-text-muted: #6a6153;
+  --strata-text-subtle: #8c8271;
+  --strata-accent-subtle: #eef4ff;
+  --strata-danger-subtle: #fdf0ee;
+  --strata-success-subtle: #eefaf1;
+  --strata-warning-subtle: #fdf6e9;
+
+  /* slab geometry: crisp borders, solid offset shadows, settle motion */
+  --strata-border-width: 1.5px;
+  --strata-shadow-xs: 1px 1px 0 0 var(--sed-ink);
+  --strata-shadow-sm: 2px 2px 0 0 var(--sed-ink);
+  --strata-shadow-md:
+    4px 4px 0 0 var(--sed-ink),
+    0 5px 0 -1px var(--sed-edge-1),
+    0 8px 0 -2px var(--sed-edge-2);
+  --strata-shadow-lg:
+    6px 6px 0 0 var(--sed-ink),
+    0 6px 0 -1px var(--sed-edge-1),
+    0 11px 0 -3px var(--sed-edge-2);
+  --strata-duration-fast: 120ms;
+  --strata-duration-slow: 320ms;
+  --strata-easing-default: cubic-bezier(0.22, 1.2, 0.36, 1);
+}
+
+[data-theme='dark'][data-strata-skin='sediment'] {
+  --sed-ink: #000000;
+  --sed-edge-1: #403830;
+  --sed-edge-2: #2c261f;
+
+  --strata-canvas: #15120e;
+  --strata-surface: #221d18;
+  --strata-surface-raised: #2c261f;
+  --strata-surface-sunken: #100c09;
+  --strata-surface-hover: #2c261f;
+  --strata-border: #403830;
+  --strata-border-strong: #544a3e;
+  --strata-text: #faf8f5;
+  --strata-text-muted: #d6cec1;
+  --strata-text-subtle: #b3a996;
+  --strata-accent-subtle: #16233d;
+  --strata-on-accent: #050d1c;
+  --strata-danger-subtle: #331512;
+  --strata-on-danger: #1e0806;
+  --strata-success-subtle: #12251a;
+  --strata-warning-subtle: #2b1f0a;
+}
+
+/* --------------------------------------------------------------- buttons */
+
+[data-strata-skin='sediment'] strata-button {
+  --sed-btn-ink: var(--sed-ink);
+}
+[data-strata-skin='sediment'] strata-button[variant='primary'] {
+  --sed-btn-ink: var(--sed-ink-accent);
+}
+[data-strata-skin='sediment'] strata-button[variant='danger'] {
+  --sed-btn-ink: var(--sed-ink-danger);
+}
+[data-strata-skin='sediment'] strata-button[variant='ghost'] {
+  --sed-btn-ink: transparent;
+}
+
+[data-strata-skin='sediment'] strata-button::part(button) {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  border-color: var(--sed-btn-ink);
+  box-shadow: 2px 2px 0 0 var(--sed-btn-ink);
+  transition:
+    background-color 120ms ease,
+    transform 180ms cubic-bezier(0.22, 1.2, 0.36, 1),
+    box-shadow 180ms cubic-bezier(0.22, 1.2, 0.36, 1);
+}
+[data-strata-skin='sediment'] strata-button[variant='secondary']::part(button) {
+  border-color: var(--strata-border-strong);
+}
+[data-strata-skin='sediment'] strata-button[variant='ghost']::part(button) {
+  box-shadow: none;
+}
+
+/* hover = slab lifts */
+[data-strata-skin='sediment']
+  strata-button:not([disabled]):not([loading])::part(button):hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 0 var(--sed-btn-ink);
+}
+[data-strata-skin='sediment']
+  strata-button[variant='ghost']:not([disabled]):not([loading])::part(button):hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* press = slab drops onto its shadow */
+[data-strata-skin='sediment']
+  strata-button:not([disabled]):not([loading])::part(button):active {
+  transition-duration: 90ms;
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 0 transparent;
+}
+
+[data-strata-skin='sediment'] strata-button[disabled]::part(button) {
+  box-shadow: none;
+  border-color: transparent;
+}
+
+[data-strata-skin='sediment'] strata-icon-button::part(button) {
+  border-color: var(--strata-border-strong);
+  box-shadow: 2px 2px 0 0 var(--sed-ink);
+}
+[data-strata-skin='sediment']
+  strata-icon-button:not([disabled])::part(button):active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 0 transparent;
+}
+
+/* ----------------------------------------------------------------- forms */
+
+[data-strata-skin='sediment'] strata-input::part(label),
+[data-strata-skin='sediment'] strata-textarea::part(label),
+[data-strata-skin='sediment'] strata-select::part(label),
+[data-strata-skin='sediment'] strata-checkbox::part(label),
+[data-strata-skin='sediment'] strata-radio::part(label) {
+  font-weight: 600;
+}
+
+[data-strata-skin='sediment'] strata-input::part(input),
+[data-strata-skin='sediment'] strata-textarea::part(textarea),
+[data-strata-skin='sediment'] strata-select::part(select) {
+  border-color: var(--strata-border-strong);
+}
+
+/* ---------------------------------------------------------------- toasts */
+
+/* strata band: a 3px tone edge on the left */
+[data-strata-skin='sediment'] strata-toast::part(toast) {
+  border-left: 3px solid var(--strata-text-subtle);
+}
+[data-strata-skin='sediment'] strata-toast[tone='info']::part(toast) {
+  border-left-color: var(--strata-accent);
+}
+[data-strata-skin='sediment'] strata-toast[tone='success']::part(toast) {
+  border-left-color: var(--strata-success);
+}
+[data-strata-skin='sediment'] strata-toast[tone='warning']::part(toast) {
+  border-left-color: var(--strata-warning);
+}
+[data-strata-skin='sediment'] strata-toast[tone='danger']::part(toast) {
+  border-left-color: var(--strata-danger);
+}
+
+/* ----------------------------------------------------------- containers */
+
+[data-strata-skin='sediment'] strata-card::part(header),
+[data-strata-skin='sediment'] strata-dialog::part(header) {
+  font-family: var(--strata-font-display, 'Satoshi', 'Inter', sans-serif);
+  letter-spacing: -0.01em;
+}
+
+[data-strata-skin='sediment'] strata-tabs::part(tab) {
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-strata-skin='sediment'] strata-button::part(button),
+  [data-strata-skin='sediment'] strata-icon-button::part(button) {
+    transition: none;
+  }
+}

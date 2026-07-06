@@ -1,7 +1,7 @@
 {
   "name": "@hitenpatel/strata",
   "version": "0.1.0",
-  "description": "Strata — a themeable, accessible design system built layer by layer. Two-tier design tokens and Lit 3 web components, documented in Storybook.",
+  "description": "Strata \u2014 a themeable, accessible design system built layer by layer. Two-tier design tokens and Lit 3 web components, documented in Storybook.",
   "license": "MIT",
   "author": "Hiten Patel <hello@hiten.dev> (https://hiten.dev)",
   "repository": {
@@ -27,7 +27,8 @@
       "default": "./dist/vue/index.js"
     },
     "./tokens.css": "./dist/tokens.css",
-    "./tokens.json": "./tokens/tokens.json"
+    "./tokens.json": "./tokens/tokens.json",
+    "./themes/sediment.css": "./themes/sediment.css"
   },
   "peerDependencies": {
     "react": ">=17",
@@ -43,7 +44,8 @@
   },
   "files": [
     "dist",
-    "tokens/tokens.json"
+    "tokens/tokens.json",
+    "themes"
   ],
   "sideEffects": [
     "./src/index.ts",
@@ -77,6 +79,7 @@
   "devDependencies": {
     "@open-wc/testing": "^4.0.0",
     "@storybook/addon-a11y": "^8.6",
+    "@storybook/addon-docs": "8.6.14",
     "@storybook/addon-essentials": "^8.6",
     "@storybook/web-components": "^8.6",
     "@storybook/web-components-vite": "^8.6",
@@ -91,6 +94,7 @@
     "playwright": "^1.61.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
+    "remark-gfm": "^4.0.1",
     "storybook": "^8.6",
     "typescript": "~5.6",
     "vue": "^3.5.39"

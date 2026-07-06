@@ -24,20 +24,23 @@ export class StrataAvatar extends LitElement {
       overflow: hidden;
       box-sizing: border-box;
       border-radius: var(--strata-radius-full, 999px);
-      /* Sediment: every disc is a slab edge — crisp 1.5px border. */
-      border: var(--strata-border-width, 1.5px) solid
-        var(--strata-border-strong, #d6cec1);
-      background: var(--strata-accent-subtle, #eef4ff);
-      color: var(--strata-accent, #2563eb);
+      background: var(--strata-surface-sunken, #f4f4f5);
+      /* Muted initials, mixed towards text to clear WCAG AA (4.5:1) —
+         pure text-muted on surface-sunken measures 4.39:1 at 13px. */
+      color: color-mix(
+        in srgb,
+        var(--strata-text-muted, #71717a) 70%,
+        var(--strata-text, #09090b)
+      );
       font-family: var(--strata-font-body, system-ui, sans-serif);
       font-weight: 600;
       user-select: none;
     }
-    /* Layered-disc stacking: when avatars are overlapped by the consumer
-       (negative margins), each disc separates from the one beneath it with
-       a 2px surface-colour ring. */
+    /* Stacked overlap: when avatars are overlapped by the consumer
+       (negative margins), each circle separates from the one beneath it
+       with a 2px canvas-colour ring. */
     :host(:not(:first-of-type)) .avatar {
-      box-shadow: 0 0 0 2px var(--strata-surface, #fff);
+      box-shadow: 0 0 0 2px var(--strata-canvas, #fff);
     }
     img {
       display: block;
@@ -76,14 +79,15 @@ export class StrataAvatar extends LitElement {
   render() {
     if (this.src) {
       return html`
-        <span class="avatar">
-          <img src=${this.src} alt=${this.name} />
+        <span class="avatar" part="avatar">
+          <img part="image" src=${this.src} alt=${this.name} />
         </span>
       `;
     }
     return html`
       <span
         class="avatar"
+        part="avatar"
         role=${this.name ? 'img' : nothing}
         aria-label=${this.name || nothing}
         aria-hidden=${this.name ? nothing : 'true'}

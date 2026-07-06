@@ -25,13 +25,13 @@ export class StrataCheckbox extends LitElement {
       gap: var(--strata-space-2, 8px);
       min-height: 40px;
       font-size: 14px;
-      color: var(--strata-text, #231f1a);
+      color: var(--strata-text, #09090b);
       cursor: pointer;
       user-select: none;
     }
     :host([disabled]) label {
       cursor: not-allowed;
-      color: var(--strata-text-subtle, #8c8271);
+      color: var(--strata-text-muted, #71717a);
     }
     input {
       position: absolute;
@@ -41,89 +41,51 @@ export class StrataCheckbox extends LitElement {
       opacity: 0;
       pointer-events: none;
     }
-    /* Sediment: a small raised slab that stamps down onto its shadow when checked */
     .box {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       flex: none;
       border-radius: var(--strata-radius-sm, 4px);
-      border: var(--strata-border-width, 1.5px) solid var(--strata-border-strong, #d6cec1);
+      border: var(--strata-border-width, 1px) solid var(--strata-border-strong, #d4d4d8);
       background: var(--strata-surface, #fff);
       color: var(--strata-on-accent, #fff);
       box-sizing: border-box;
-      box-shadow: 2px 2px 0 0 var(--strata-layer-shadow, #d6cec1);
       transition:
-        background-color var(--strata-duration-fast, 120ms) var(--strata-easing-drop, ease),
-        border-color var(--strata-duration-fast, 120ms) var(--strata-easing-drop, ease),
-        transform var(--strata-duration-press, 90ms) var(--strata-easing-drop, ease),
-        box-shadow var(--strata-duration-press, 90ms) var(--strata-easing-drop, ease);
+        background-color var(--strata-duration-fast, 150ms) var(--strata-easing-default, ease),
+        border-color var(--strata-duration-fast, 150ms) var(--strata-easing-default, ease);
     }
     :host([checked]) .box,
     :host([indeterminate]) .box {
-      border-color: var(--strata-layer-shadow-accent, #1d4ed8);
+      border-color: var(--strata-accent, #2563eb);
       background: var(--strata-accent, #2563eb);
-      transform: translate(var(--strata-offset-1, 2px), var(--strata-offset-1, 2px));
-      box-shadow: 0 0 0 0 transparent;
     }
     :host([disabled]) .box {
-      border-color: var(--strata-border, #e7e1d8);
-      background: var(--strata-surface-sunken, #f3efe9);
-      color: var(--strata-text-subtle, #8c8271);
-      opacity: 0.6;
-      box-shadow: none;
-      transform: none;
+      opacity: 0.5;
     }
     input:focus-visible + .box {
-      box-shadow:
-        2px 2px 0 0 var(--strata-layer-shadow, #d6cec1),
-        0 0 0 2px var(--strata-surface, #fff),
-        0 0 0 4px var(--strata-focus-ring, #2563eb);
-    }
-    :host([checked]) input:focus-visible + .box,
-    :host([indeterminate]) input:focus-visible + .box {
-      box-shadow:
-        0 0 0 2px var(--strata-surface, #fff),
-        0 0 0 4px var(--strata-focus-ring, #2563eb);
+      outline: 2px solid var(--strata-focus-ring, #2563eb);
+      outline-offset: 2px;
     }
     .check,
     .dash {
       display: none;
     }
-    /* Check stamps in: 1.15 -> 1 settle */
     :host([checked]:not([indeterminate])) .check {
       display: block;
-      animation: stamp 180ms var(--strata-easing-settle, cubic-bezier(0.22, 1.2, 0.36, 1));
     }
     :host([indeterminate]) .dash {
       display: block;
-      width: 9px;
-      height: 2.5px;
+      width: 8px;
+      height: 2px;
       background: currentColor;
-      border-radius: 2px;
-      animation: stamp 180ms var(--strata-easing-settle, cubic-bezier(0.22, 1.2, 0.36, 1));
-    }
-    @keyframes stamp {
-      from {
-        transform: scale(1.15);
-      }
-      to {
-        transform: scale(1);
-      }
+      border-radius: 1px;
     }
     @media (prefers-reduced-motion: reduce) {
       .box {
         transition: none;
-      }
-      :host([checked]) .box,
-      :host([indeterminate]) .box {
-        transform: none;
-      }
-      .check,
-      .dash {
-        animation: none;
       }
     }
   `;
@@ -143,7 +105,7 @@ export class StrataCheckbox extends LitElement {
 
   render() {
     return html`
-      <label>
+      <label part="label">
         <input
           type="checkbox"
           name=${this.name}
@@ -153,7 +115,7 @@ export class StrataCheckbox extends LitElement {
           ?disabled=${this.disabled}
           @change=${this.onChange}
         />
-        <span class="box" aria-hidden="true">
+        <span class="box" part="control" aria-hidden="true">
           <svg
             class="check"
             width="12"
@@ -161,7 +123,7 @@ export class StrataCheckbox extends LitElement {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="3.5"
+            stroke-width="4"
             stroke-linecap="round"
             stroke-linejoin="round"
           >

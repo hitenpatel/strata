@@ -1,0 +1,159 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Docs/Theming" />
+
+# Theming
+
+Strata ships a deliberately neutral baseline and leaves the visual identity to
+you. There are two theming layers, and they compose:
+
+1. **Design tokens** — CSS custom properties for the broad strokes: colour,
+   spacing, radius, shadow, motion. Override a handful of variables and every
+   component follows.
+2. **CSS `::part()`** — every component exposes its internal elements as named
+   parts, so you can restyle any piece surgically from ordinary CSS. No shadow
+   DOM piercing hacks, no forking.
+
+## Built-in modes
+
+Two attributes on `<html>` (or any ancestor) switch the bundled token sets:
+
+```html
+<html data-theme="dark">                      <!-- dark theme -->
+<html data-variant="showcase">                <!-- violet accent -->
+<html data-theme="dark" data-variant="showcase">
+```
+
+Both are just token overrides — see below for making your own.
+
+## Design tokens
+
+Tokens compile from a single [W3C Design Tokens](https://design-tokens.github.io/community-group/format/)
+source into two tiers of custom properties:
+
+- **Primitives** — raw scales: `--strata-color-blue-600`, `--strata-space-4`,
+  `--strata-radius-md`, `--strata-duration-fast`…
+- **Semantic** — role-based aliases that components actually consume.
+  Components never reference primitives directly, so retheming only requires
+  touching the semantic tier.
+
+### Semantic token reference
+
+| Token | Role |
+| --- | --- |
+| `--strata-canvas` | Page background |
+| `--strata-surface` | Component background |
+| `--strata-surface-raised` | Elevated surfaces (raised cards, menus, dialogs) |
+| `--strata-surface-sunken` | Recessed areas (card footers, table headers, disabled inputs) |
+| `--strata-surface-hover` | Hover fill for ghost/secondary controls |
+| `--strata-border` | Default hairline border |
+| `--strata-border-strong` | Emphasised border (unchecked switch track) |
+| `--strata-text` | Primary text |
+| `--strata-text-muted` | Secondary text (hints, placeholders) |
+| `--strata-text-subtle` | Tertiary text (separators, disabled) |
+| `--strata-accent` / `-hover` / `-subtle` | Brand colour, its hover state, and a faint tint |
+| `--strata-on-accent` | Text/icons on accent fills |
+| `--strata-danger` / `-hover` / `-subtle` / `--strata-on-danger` | Destructive palette |
+| `--strata-success` / `-subtle` | Positive palette |
+| `--strata-warning` / `-subtle` | Caution palette |
+| `--strata-focus-ring` | Focus outline colour (keep this ≥3:1 against adjacent colours) |
+| `--strata-shadow-xs` / `-sm` / `-md` / `-lg` | Elevation ramp |
+
+Plus primitives for `space-1…8`, `radius-sm/md/lg/xl/full`, `border-width`,
+`duration-fast/base/slow`, `easing-default/out/in`, and the `font-body/display/mono`
+stacks.
+
+### Overriding tokens
+
+Set variables at `:root` (or any scope — they cascade):
+
+```css
+:root {
+  --strata-accent: #0d9488;
+  --strata-accent-hover: #0f766e;
+  --strata-focus-ring: #0d9488;
+  --strata-radius-md: 2px;
+  --strata-font-body: 'IBM Plex Sans', sans-serif;
+}
+```
+
+Scoped theming works too — tokens are inherited custom properties:
+
+```css
+.marketing-hero {
+  --strata-accent: var(--strata-color-violet-600);
+}
+```
+
+## Styling internals with `::part()`
+
+Tokens change values; parts change *rules*. Every component exposes its key
+internal elements via `part` attributes, styleable with the standard
+[`::part()`](https://developer.mozilla.org/en-US/docs/Web/CSS/::part) selector:
+
+```css
+/* Pill-shaped buttons with uppercase labels */
+strata-button::part(button) {
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Borderless inputs with only a bottom rule */
+strata-input::part(input) {
+  border-width: 0 0 2px;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Card headers as full-bleed banners */
+strata-card::part(header) {
+  background: var(--strata-accent);
+  color: var(--strata-on-accent);
+}
+```
+
+States expressed as host attributes remain selectable:
+
+```css
+strata-button[variant='primary']::part(button) { font-weight: 700; }
+strata-toast[tone='danger']::part(toast) { border-left: 4px solid var(--strata-danger); }
+```
+
+### Part reference
+
+| Component | Parts |
+| --- | --- |
+| `strata-avatar` | `avatar`, `image` |
+| `strata-badge` | `badge` |
+| `strata-breadcrumb` | `nav`, `list`, `link` |
+| `strata-button` | `button`, `spinner` |
+| `strata-card` | `header`, `body`, `footer` |
+| `strata-checkbox` | `control`, `label` |
+| `strata-dialog` | `dialog`, `header`, `body`, `footer` |
+| `strata-icon-button` | `button` |
+| `strata-input` | `field`, `label`, `input`, `hint`, `error` |
+| `strata-menu` | `menu` / `panel` (same element), `item` |
+| `strata-pagination` | `nav`, `button` |
+| `strata-radio` | `control`, `label` |
+| `strata-select` | `field`, `label`, `select`, `hint`, `error` |
+| `strata-skeleton` | `skeleton` |
+| `strata-switch` | `track`, `thumb` |
+| `strata-table` | `table`, `header`, `head`, `row`, `cell` |
+| `strata-tabs` | `tablist`, `tab`, `panel` |
+| `strata-textarea` | `field`, `label`, `textarea`, `hint`, `error` |
+| `strata-toast` | `toast`, `heading`, `message`, `dismiss` |
+| `strata-tooltip` | `tooltip` |
+
+## What stays fixed
+
+Restyle anything — but the accessibility contract doesn't move:
+
+- Focus is always visible (`:focus-visible` outlines are part of the
+  components; recolour via `--strata-focus-ring` rather than removing them).
+- All motion respects `prefers-reduced-motion`.
+- Keyboard interaction, ARIA roles and states are internal and unaffected by
+  either theming layer.
+
+If you swap colours, verify contrast: 4.5:1 for text, 3:1 for UI boundaries
+and focus indicators (WCAG 2.2 AA).

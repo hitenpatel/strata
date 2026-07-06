@@ -9,6 +9,11 @@ export class StrataMenuItem extends LitElement {
 
   static styles = css`
     :host {
+      display: block;
+      border-radius: var(--strata-radius-sm, 4px);
+      outline: none;
+    }
+    .item {
       display: flex;
       align-items: center;
       gap: var(--strata-space-2, 8px);
@@ -16,47 +21,30 @@ export class StrataMenuItem extends LitElement {
       border-radius: var(--strata-radius-sm, 4px);
       font-family: var(--strata-font-body, system-ui, sans-serif);
       font-size: 14px;
-      color: var(--strata-text, #231f1a);
+      color: var(--strata-text, #09090b);
       cursor: pointer;
       user-select: none;
       white-space: nowrap;
-      outline: none;
-      transition:
-        background-color var(--strata-duration-fast, 120ms) var(--strata-easing-drop, ease),
-        box-shadow var(--strata-duration-fast, 120ms) var(--strata-easing-drop, ease);
+      transition: background-color var(--strata-duration-fast, 150ms)
+        var(--strata-easing-default, ease);
     }
-    :host(:hover) {
-      background: var(--strata-surface-hover, #faf8f5);
-    }
-    /* Active (focused) item: accent-subtle fill + the 3px strata band */
-    :host(:focus) {
-      background: var(--strata-accent-subtle, #eef4ff);
-      box-shadow: inset 3px 0 0 0 var(--strata-band-accent, #2563eb);
+    :host(:hover) .item,
+    :host(:focus) .item {
+      background: var(--strata-surface-hover, #f4f4f5);
     }
     :host(:focus-visible) {
-      box-shadow:
-        inset 3px 0 0 0 var(--strata-band-accent, #2563eb),
-        0 0 0 2px var(--strata-surface, #fff),
-        0 0 0 4px var(--strata-focus-ring, #2563eb);
+      outline: 2px solid var(--strata-focus-ring, #2563eb);
+      outline-offset: -2px;
     }
-    :host([danger]) {
+    :host([danger]) .item {
       color: var(--strata-danger, #dc2626);
     }
-    :host([danger]:hover) {
-      background: var(--strata-danger-subtle, #fdf0ee);
-    }
-    :host([danger]:focus) {
-      background: var(--strata-danger-subtle, #fdf0ee);
-      box-shadow: inset 3px 0 0 0 var(--strata-band-danger, #dc2626);
-    }
-    :host([danger]:focus-visible) {
-      box-shadow:
-        inset 3px 0 0 0 var(--strata-band-danger, #dc2626),
-        0 0 0 2px var(--strata-surface, #fff),
-        0 0 0 4px var(--strata-focus-ring, #2563eb);
+    :host([danger]:hover) .item,
+    :host([danger]:focus) .item {
+      background: var(--strata-danger-subtle, #fef2f2);
     }
     @media (prefers-reduced-motion: reduce) {
-      :host {
+      .item {
         transition: none;
       }
     }
@@ -69,7 +57,7 @@ export class StrataMenuItem extends LitElement {
   }
 
   render() {
-    return html`<slot></slot>`;
+    return html`<span class="item" part="item"><slot></slot></span>`;
   }
 }
 
@@ -82,7 +70,6 @@ export class StrataMenu extends LitElement {
       display: inline-block;
       position: relative;
     }
-    /* Sediment: the menu is a floating slab — offset-2 shadow + one echoed under-edge */
     .popup {
       position: absolute;
       top: calc(100% + var(--strata-space-1, 4px));
@@ -91,27 +78,26 @@ export class StrataMenu extends LitElement {
       min-width: 200px;
       padding: var(--strata-space-1, 4px);
       background: var(--strata-surface-raised, #fff);
-      border: var(--strata-border-width, 1.5px) solid var(--strata-border-strong, #d6cec1);
-      border-radius: var(--strata-radius-lg, 8px);
-      box-shadow:
-        4px 4px 0 0 var(--strata-layer-shadow, #d6cec1),
-        0 5px 0 -1px var(--strata-layer-edge-1, #d6cec1);
-      animation: menu-settle var(--strata-duration-base, 200ms)
-        var(--strata-easing-settle, cubic-bezier(0.22, 1.2, 0.36, 1));
+      border: var(--strata-border-width, 1px) solid var(--strata-border, #e4e4e7);
+      border-radius: var(--strata-radius-md, 6px);
+      box-shadow: var(
+        --strata-shadow-md,
+        0 4px 6px -1px rgb(0 0 0 / 0.1),
+        0 2px 4px -2px rgb(0 0 0 / 0.1)
+      );
+      transform-origin: top left;
+      animation: menu-in var(--strata-duration-fast, 150ms)
+        var(--strata-easing-out, cubic-bezier(0, 0, 0.2, 1));
     }
     :host(:not([open])) .popup {
       display: none;
     }
-    /* Enters with a 4px drop + settle */
-    @keyframes menu-settle {
-      0% {
+    @keyframes menu-in {
+      from {
         opacity: 0;
-        transform: translateY(-4px);
+        transform: scale(0.98);
       }
-      70% {
-        transform: translateY(1px);
-      }
-      100% {
+      to {
         opacity: 1;
         transform: none;
       }
@@ -126,7 +112,7 @@ export class StrataMenu extends LitElement {
     }
     @media (prefers-reduced-motion: reduce) {
       .popup {
-        animation: menu-fade var(--strata-duration-fast, 120ms) ease;
+        animation: menu-fade var(--strata-duration-fast, 150ms) ease;
       }
     }
   `;
@@ -260,6 +246,7 @@ export class StrataMenu extends LitElement {
       ></slot>
       <div
         class="popup"
+        part="menu panel"
         role="menu"
         @click=${this.handleMenuClick}
         @keydown=${this.handleMenuKeydown}

@@ -4,28 +4,27 @@ import { Meta } from '@storybook/blocks';
 
 # Strata
 
-A themeable, accessible design system built layer by layer — two-tier design
-tokens and Lit 3 web components. One core, consumable from plain HTML, React
-and Vue.
+An accessibility-first web component library with a neutral, themeable
+baseline — two-tier design tokens and Lit 3 web components. One core,
+consumable from plain HTML, React and Vue.
 
 - **Source**: [github.com/hitenpatel/strata](https://github.com/hitenpatel/strata)
 - **Package**: `@hitenpatel/strata`
 
-## Visual language: Sediment
+## Philosophy
 
-Strata = layers of sediment. Every element is a slab of material resting on
-the strata beneath it — nothing floats, nothing glows, nothing blurs:
+Strata handles the hard parts — keyboard interaction, ARIA semantics, focus
+management, contrast-safe defaults — and stays out of the way on the visual
+identity:
 
-- **Solid offset shadows, never blur.** Elevation is a hard shadow offset
-  down-right, coloured by the element's own material.
-- **Echoed under-edges.** Cards, menus and dialogs show the lower layers
-  peeking out beneath — a strata cross-section.
-- **Strata bands.** A 3px band on the left edge carries tone: toast severity,
-  active menu items, input focus.
-- **Crisp 1.5px borders** on every interactive slab.
-- **Motion = settle.** Pressing drops a slab onto its shadow; layers slide in
-  and settle with a tiny overshoot. All motion respects
-  `prefers-reduced-motion`.
+- **Accessibility first.** Every component ships WCAG 2.2 AA out of the box:
+  visible focus rings, 4.5:1 text contrast in both themes,
+  `prefers-reduced-motion` support, and axe-verified stories.
+- **Neutral baseline.** A quiet, hairline-and-soft-shadow default look (in the
+  spirit of shadcn/ui) that works as-is and doesn't fight your brand.
+- **Styling belongs to the implementor.** Two composable theming layers —
+  design tokens for the broad strokes, CSS `::part()` for surgical restyling.
+  See the [Theming](?path=/docs/docs-theming--docs) page.
 
 ## Installation
 
@@ -48,17 +47,18 @@ Tokens live in a single [W3C Design Tokens](https://design-tokens.github.io/comm
 file and compile to CSS custom properties in two tiers:
 
 1. **Primitives** — raw scales: colour ramps (`--strata-color-blue-600`),
-   spacing (`--strata-space-4`), radii, elevation offsets, motion.
+   spacing (`--strata-space-4`), radii, shadows, motion.
 2. **Semantic** — role-based aliases components actually consume:
    `--strata-surface`, `--strata-text-muted`, `--strata-accent`,
-   `--strata-layer-shadow`, `--strata-band-danger`, `--strata-focus-ring`…
+   `--strata-focus-ring`…
 
 Components only ever reference semantic tokens, which is what makes theming
 free.
 
 ## Theming
 
-Two attributes on `<html>` control appearance; no component code changes:
+Two attributes on `<html>` switch the bundled token sets; no component code
+changes:
 
 ```html
 <html data-theme="dark">                  <!-- dark theme -->
@@ -67,7 +67,8 @@ Two attributes on `<html>` control appearance; no component code changes:
 ```
 
 Try it live: use the **Theme** and **Accent** dropdowns in the toolbar above —
-every story responds instantly.
+every story responds instantly. For custom themes and per-component
+restyling, see [Theming](?path=/docs/docs-theming--docs).
 
 ## Framework support
 

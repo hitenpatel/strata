@@ -26,73 +26,52 @@ export class StrataPagination extends LitElement {
       align-items: center;
       justify-content: center;
       box-sizing: border-box;
-      min-width: 40px;
-      height: 40px;
+      min-width: 36px;
+      height: 36px;
       padding: 0 var(--strata-space-2, 8px);
       border-radius: var(--strata-radius-md, 6px);
-      border: var(--strata-border-width, 1.5px) solid var(--strata-border-strong, #d6cec1);
-      background: var(--strata-surface, #fff);
-      color: var(--strata-text, #231f1a);
+      border: var(--strata-border-width, 1px) solid transparent;
+      background: transparent;
+      color: var(--strata-text, #09090b);
       font-family: var(--strata-font-body, system-ui, sans-serif);
       font-size: 14px;
       font-weight: 500;
       cursor: pointer;
       transition:
-        background-color var(--strata-duration-fast, 120ms) var(--strata-easing-drop, ease),
-        border-color var(--strata-duration-fast, 120ms) var(--strata-easing-drop, ease),
-        box-shadow 180ms var(--strata-easing-settle, ease),
-        transform 180ms var(--strata-easing-settle, ease);
+        background-color var(--strata-duration-fast, 150ms) var(--strata-easing-default, ease),
+        border-color var(--strata-duration-fast, 150ms) var(--strata-easing-default, ease),
+        color var(--strata-duration-fast, 150ms) var(--strata-easing-default, ease);
     }
     button:hover:not(:disabled):not([aria-current='page']) {
-      background: var(--strata-surface-hover, #faf8f5);
+      background: var(--strata-surface-hover, #f4f4f5);
     }
     button:focus-visible {
-      outline: none;
-      box-shadow:
-        0 0 0 2px var(--strata-surface, #fff),
-        0 0 0 4px var(--strata-focus-ring, #2563eb);
+      outline: 2px solid var(--strata-focus-ring, #2563eb);
+      outline-offset: 2px;
     }
     button:disabled {
-      opacity: 0.42;
+      opacity: 0.5;
       cursor: not-allowed;
     }
-    /* Sediment: the current page is a mini raised slab at offset-1 */
+    /* Current page: outlined, not accent-filled */
     button[aria-current='page'] {
-      background: var(--strata-accent, #2563eb);
-      border-color: var(--strata-layer-shadow-accent, #1d4ed8);
-      color: var(--strata-on-accent, #fff);
-      font-weight: 600;
-      box-shadow: 2px 2px 0 0 var(--strata-layer-shadow-accent, #1d4ed8);
-    }
-    button[aria-current='page']:focus-visible {
-      box-shadow:
-        2px 2px 0 0 var(--strata-layer-shadow-accent, #1d4ed8),
-        0 0 0 2px var(--strata-surface, #fff),
-        0 0 0 4px var(--strata-focus-ring, #2563eb);
-    }
-    /* Press = the slab drops onto its shadow */
-    button:active:not(:disabled) {
-      transition:
-        transform var(--strata-duration-press, 90ms) var(--strata-easing-drop, ease),
-        box-shadow var(--strata-duration-press, 90ms) var(--strata-easing-drop, ease);
-      transform: translate(var(--strata-offset-1, 2px), var(--strata-offset-1, 2px));
-      box-shadow: 0 0 0 0 transparent;
+      background: var(--strata-surface, #fff);
+      border-color: var(--strata-border-strong, #d4d4d8);
+      color: var(--strata-text, #09090b);
+      box-shadow: var(--strata-shadow-xs, 0 1px 2px 0 rgb(0 0 0 / 0.05));
     }
     .arrow {
-      color: var(--strata-text-muted, #6a6153);
+      color: var(--strata-text-muted, #71717a);
     }
     .ellipsis {
       min-width: var(--strata-space-6, 32px);
       text-align: center;
-      color: var(--strata-text-subtle, #8c8271);
+      color: var(--strata-text-subtle, #a1a1aa);
       user-select: none;
     }
     @media (prefers-reduced-motion: reduce) {
       button {
         transition: none;
-      }
-      button:active:not(:disabled) {
-        transform: none;
       }
     }
   `;
@@ -136,8 +115,9 @@ export class StrataPagination extends LitElement {
 
   render() {
     return html`
-      <nav aria-label="Pagination">
+      <nav part="nav" aria-label="Pagination">
         <button
+          part="button"
           class="arrow"
           aria-label="Previous page"
           ?disabled=${this.page <= 1}
@@ -153,6 +133,7 @@ export class StrataPagination extends LitElement {
             ? html`<span class="ellipsis" aria-hidden="true">…</span>`
             : html`
                 <button
+                  part=${item === this.page ? 'button page active' : 'button page'}
                   aria-current=${item === this.page ? 'page' : nothing}
                   aria-label=${`Page ${item}`}
                   @click=${() => this.goTo(item)}
@@ -162,6 +143,7 @@ export class StrataPagination extends LitElement {
               `
         )}
         <button
+          part="button"
           class="arrow"
           aria-label="Next page"
           ?disabled=${this.page >= this.total}

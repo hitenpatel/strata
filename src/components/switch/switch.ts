@@ -25,7 +25,7 @@ export class StrataSwitch extends LitElement {
       background: transparent;
       font-family: inherit;
       font-size: 14px;
-      color: var(--strata-text, #231f1a);
+      color: var(--strata-text, #09090b);
       cursor: pointer;
       user-select: none;
     }
@@ -33,15 +33,13 @@ export class StrataSwitch extends LitElement {
       outline: none;
     }
     button:focus-visible .track {
-      box-shadow:
-        0 0 0 2px var(--strata-surface, #fff),
-        0 0 0 4px var(--strata-focus-ring, #2563eb);
+      outline: 2px solid var(--strata-focus-ring, #2563eb);
+      outline-offset: 2px;
     }
     button:disabled {
       cursor: not-allowed;
-      color: var(--strata-text-subtle, #8c8271);
+      color: var(--strata-text-muted, #71717a);
     }
-    /* Sediment: recessed channel; the thumb is a mini slab that slides and settles */
     .track {
       display: inline-flex;
       align-items: center;
@@ -49,56 +47,36 @@ export class StrataSwitch extends LitElement {
       height: 24px;
       flex: none;
       border-radius: var(--strata-radius-full, 999px);
-      background: var(--strata-surface-sunken, #f3efe9);
-      border: var(--strata-border-width, 1.5px) solid var(--strata-border-strong, #d6cec1);
+      background: var(--strata-border-strong, #d4d4d8);
       padding: 2px;
       box-sizing: border-box;
-      transition:
-        background-color var(--strata-duration-base, 200ms) var(--strata-easing-drop, ease),
-        border-color var(--strata-duration-base, 200ms) var(--strata-easing-drop, ease);
+      transition: background-color var(--strata-duration-base, 200ms)
+        var(--strata-easing-default, ease);
     }
     .thumb {
-      width: 18px;
-      height: 18px;
+      width: 20px;
+      height: 20px;
       box-sizing: border-box;
       border-radius: var(--strata-radius-full, 999px);
-      background: var(--strata-surface, #fff);
-      border: var(--strata-border-width, 1.5px) solid var(--strata-border-strong, #d6cec1);
-      box-shadow: 2px 2px 0 0 var(--strata-layer-shadow, #d6cec1);
+      background: #fff;
+      box-shadow: var(--strata-shadow-xs, 0 1px 2px 0 rgb(0 0 0 / 0.05));
       transform: translateX(0);
-      transition:
-        transform var(--strata-duration-base, 200ms)
-          var(--strata-easing-settle, cubic-bezier(0.22, 1.2, 0.36, 1)),
-        border-color var(--strata-duration-base, 200ms) var(--strata-easing-drop, ease),
-        box-shadow var(--strata-duration-base, 200ms) var(--strata-easing-drop, ease);
+      transition: transform var(--strata-duration-base, 200ms)
+        var(--strata-easing-default, ease);
     }
     :host([checked]) .track {
       background: var(--strata-accent, #2563eb);
-      border-color: var(--strata-layer-shadow-accent, #1d4ed8);
     }
     :host([checked]) .thumb {
       transform: translateX(16px);
-      border-color: var(--strata-layer-shadow-accent, #1d4ed8);
-      box-shadow: 2px 2px 0 0 var(--strata-layer-shadow-accent, #1d4ed8);
     }
     :host([disabled]) .track {
-      background: var(--strata-surface-sunken, #f3efe9);
-      border-color: var(--strata-border, #e7e1d8);
-      opacity: 0.55;
+      opacity: 0.5;
     }
-    :host([disabled]) .thumb {
-      border-color: var(--strata-border, #e7e1d8);
-      box-shadow: none;
-    }
-    :host([disabled][checked]) .track {
-      background: var(--strata-accent, #2563eb);
-    }
-    /* Reduced motion: position change is instant, colour still crossfades */
     @media (prefers-reduced-motion: reduce) {
+      .track,
       .thumb {
-        transition:
-          border-color var(--strata-duration-base, 200ms) var(--strata-easing-drop, ease),
-          box-shadow var(--strata-duration-base, 200ms) var(--strata-easing-drop, ease);
+        transition: none;
       }
     }
   `;
@@ -119,7 +97,9 @@ export class StrataSwitch extends LitElement {
         ?disabled=${this.disabled}
         @click=${this.toggle}
       >
-        <span class="track" aria-hidden="true"><span class="thumb"></span></span>
+        <span class="track" part="track" aria-hidden="true"
+          ><span class="thumb" part="thumb"></span
+        ></span>
         <slot></slot>
       </button>
     `;

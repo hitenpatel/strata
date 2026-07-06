@@ -24,13 +24,13 @@ export class StrataRadio extends LitElement {
       gap: var(--strata-space-2, 8px);
       min-height: 40px;
       font-size: 14px;
-      color: var(--strata-text, #231f1a);
+      color: var(--strata-text, #09090b);
       cursor: pointer;
       user-select: none;
     }
     :host([disabled]) label {
       cursor: not-allowed;
-      color: var(--strata-text-subtle, #8c8271);
+      color: var(--strata-text-muted, #71717a);
     }
     input {
       position: absolute;
@@ -40,68 +40,49 @@ export class StrataRadio extends LitElement {
       opacity: 0;
       pointer-events: none;
     }
-    /* Sediment: raised empty slab that stamps down when selected; dot drops in with settle */
     .circle {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       flex: none;
       border-radius: var(--strata-radius-full, 999px);
-      border: var(--strata-border-width, 1.5px) solid var(--strata-border-strong, #d6cec1);
+      border: var(--strata-border-width, 1px) solid var(--strata-border-strong, #d4d4d8);
       background: var(--strata-surface, #fff);
       box-sizing: border-box;
-      box-shadow: 2px 2px 0 0 var(--strata-layer-shadow, #d6cec1);
-      transition:
-        border-color var(--strata-duration-fast, 120ms) var(--strata-easing-drop, ease),
-        transform var(--strata-duration-press, 90ms) var(--strata-easing-drop, ease),
-        box-shadow var(--strata-duration-press, 90ms) var(--strata-easing-drop, ease);
+      transition: border-color var(--strata-duration-fast, 150ms)
+        var(--strata-easing-default, ease);
     }
     .dot {
-      width: 9px;
-      height: 9px;
+      width: 8px;
+      height: 8px;
       border-radius: var(--strata-radius-full, 999px);
       background: var(--strata-accent, #2563eb);
       transform: scale(0);
-      transition: transform 180ms var(--strata-easing-settle, cubic-bezier(0.22, 1.2, 0.36, 1));
+      opacity: 0;
+      transition:
+        transform var(--strata-duration-fast, 150ms) var(--strata-easing-out, ease-out),
+        opacity var(--strata-duration-fast, 150ms) var(--strata-easing-out, ease-out);
     }
     :host([checked]) .circle {
       border-color: var(--strata-accent, #2563eb);
-      transform: translate(var(--strata-offset-1, 2px), var(--strata-offset-1, 2px));
-      box-shadow: 0 0 0 0 transparent;
     }
     :host([checked]) .dot {
       transform: scale(1);
+      opacity: 1;
     }
     :host([disabled]) .circle {
-      border-color: var(--strata-border, #e7e1d8);
-      background: var(--strata-surface-sunken, #f3efe9);
-      opacity: 0.6;
-      box-shadow: none;
-      transform: none;
-    }
-    :host([disabled]) .dot {
-      background: var(--strata-text-subtle, #8c8271);
+      opacity: 0.5;
     }
     input:focus-visible + .circle {
-      box-shadow:
-        2px 2px 0 0 var(--strata-layer-shadow, #d6cec1),
-        0 0 0 2px var(--strata-surface, #fff),
-        0 0 0 4px var(--strata-focus-ring, #2563eb);
-    }
-    :host([checked]) input:focus-visible + .circle {
-      box-shadow:
-        0 0 0 2px var(--strata-surface, #fff),
-        0 0 0 4px var(--strata-focus-ring, #2563eb);
+      outline: 2px solid var(--strata-focus-ring, #2563eb);
+      outline-offset: 2px;
     }
     @media (prefers-reduced-motion: reduce) {
       .circle,
       .dot {
         transition: none;
-      }
-      :host([checked]) .circle {
-        transform: none;
       }
     }
   `;
@@ -116,7 +97,7 @@ export class StrataRadio extends LitElement {
 
   render() {
     return html`
-      <label>
+      <label part="label">
         <input
           type="radio"
           name=${this.name}
@@ -125,7 +106,7 @@ export class StrataRadio extends LitElement {
           ?disabled=${this.disabled}
           @change=${this.onChange}
         />
-        <span class="circle" aria-hidden="true"><span class="dot"></span></span>
+        <span class="circle" part="control" aria-hidden="true"><span class="dot"></span></span>
         <slot></slot>
       </label>
     `;

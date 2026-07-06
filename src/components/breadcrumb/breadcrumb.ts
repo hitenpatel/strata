@@ -29,29 +29,25 @@ export class StrataBreadcrumb extends LitElement {
       font-size: 14px;
     }
     a {
-      color: var(--strata-text-muted, #6a6153);
+      color: var(--strata-text-muted, #71717a);
       text-decoration: none;
       border-radius: var(--strata-radius-sm, 4px);
-      transition: color var(--strata-duration-fast, 120ms) var(--strata-easing-drop, ease);
+      transition: color var(--strata-duration-fast, 150ms) var(--strata-easing-default, ease);
     }
     a:hover {
-      color: var(--strata-accent, #2563eb);
+      color: var(--strata-text, #09090b);
     }
     a:focus-visible {
-      outline: none;
-      box-shadow:
-        0 0 0 2px var(--strata-surface, #fff),
-        0 0 0 4px var(--strata-focus-ring, #2563eb);
+      outline: 2px solid var(--strata-focus-ring, #2563eb);
+      outline-offset: 2px;
     }
     .separator {
-      color: var(--strata-text-subtle, #8c8271);
+      color: var(--strata-text-subtle, #a1a1aa);
       user-select: none;
     }
-    /* Current page: a mini stratum — 3px accent band offset below the text */
     [aria-current='page'] {
-      color: var(--strata-text, #231f1a);
+      color: var(--strata-text, #09090b);
       font-weight: 600;
-      box-shadow: 0 5px 0 -2px var(--strata-band-accent, #2563eb);
     }
     @media (prefers-reduced-motion: reduce) {
       a {
@@ -63,14 +59,14 @@ export class StrataBreadcrumb extends LitElement {
   render() {
     const last = this.items.length - 1;
     return html`
-      <nav aria-label="Breadcrumb">
-        <ol>
+      <nav part="nav" aria-label="Breadcrumb">
+        <ol part="list">
           ${this.items.map((item, i) => {
             const isLast = i === last;
             return html`
-              <li aria-current=${isLast ? 'page' : nothing}>
+              <li part=${isLast ? 'current' : nothing} aria-current=${isLast ? 'page' : nothing}>
                 ${!isLast && item.href
-                  ? html`<a href=${item.href}>${item.label}</a>`
+                  ? html`<a part="link" href=${item.href}>${item.label}</a>`
                   : html`${item.label}`}
               </li>
               ${!isLast

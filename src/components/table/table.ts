@@ -17,7 +17,7 @@ export class StrataTable extends LitElement {
     :host {
       display: block;
       background: var(--strata-surface, #fff);
-      border: 1px solid var(--strata-border, #e7e1d8);
+      border: var(--strata-border-width, 1px) solid var(--strata-border, #e4e4e7);
       border-radius: var(--strata-radius-lg, 8px);
       overflow: hidden;
       font-family: var(--strata-font-body, system-ui, sans-serif);
@@ -30,32 +30,30 @@ export class StrataTable extends LitElement {
       border-collapse: collapse;
       font-size: 14px;
     }
-    /* Sediment: the header row is a lower stratum — sunken fill, overline type */
     th {
       text-align: left;
       padding: 11px var(--strata-space-4, 16px);
-      background: var(--strata-surface-sunken, #f3efe9);
-      border-bottom: 1px solid var(--strata-border, #e7e1d8);
-      color: var(--strata-text-muted, #6a6153);
-      font-size: 12.5px;
-      font-weight: 600;
-      letter-spacing: 0.01em;
+      background: transparent;
+      border-bottom: var(--strata-border-width, 1px) solid var(--strata-border, #e4e4e7);
+      color: var(--strata-text-muted, #71717a);
+      font-size: 13px;
+      font-weight: 500;
       white-space: nowrap;
     }
     td {
       padding: 13px var(--strata-space-4, 16px);
-      color: var(--strata-text, #231f1a);
+      color: var(--strata-text, #09090b);
     }
     tbody tr {
-      border-bottom: 1px solid var(--strata-border, #e7e1d8);
-      transition: background-color var(--strata-duration-fast, 120ms)
-        var(--strata-easing-drop, ease);
+      border-bottom: var(--strata-border-width, 1px) solid var(--strata-border, #e4e4e7);
+      transition: background-color var(--strata-duration-fast, 150ms)
+        var(--strata-easing-default, ease);
     }
     tbody tr:last-child {
       border-bottom: none;
     }
     tbody tr:hover {
-      background: var(--strata-surface-hover, #faf8f5);
+      background: var(--strata-surface-hover, #f4f4f5);
     }
     th.align-right,
     td.align-right {
@@ -65,7 +63,7 @@ export class StrataTable extends LitElement {
     .empty {
       padding: var(--strata-space-6, 32px) var(--strata-space-4, 16px);
       text-align: center;
-      color: var(--strata-text-muted, #6a6153);
+      color: var(--strata-text-muted, #71717a);
     }
     @media (prefers-reduced-motion: reduce) {
       tbody tr {
@@ -76,12 +74,12 @@ export class StrataTable extends LitElement {
 
   render() {
     return html`
-      <table>
-        <thead>
+      <table part="table">
+        <thead part="header">
           <tr>
             ${this.columns.map(
               (col) => html`
-                <th scope="col" class=${col.align === 'right' ? 'align-right' : ''}>
+                <th part="head" scope="col" class=${col.align === 'right' ? 'align-right' : ''}>
                   ${col.label}
                 </th>
               `
@@ -91,18 +89,18 @@ export class StrataTable extends LitElement {
         <tbody>
           ${this.rows.length === 0
             ? html`
-                <tr>
-                  <td class="empty" colspan=${Math.max(this.columns.length, 1)}>
+                <tr part="row">
+                  <td part="cell" class="empty" colspan=${Math.max(this.columns.length, 1)}>
                     ${this.emptyMessage}
                   </td>
                 </tr>
               `
             : this.rows.map(
                 (row) => html`
-                  <tr>
+                  <tr part="row">
                     ${this.columns.map(
                       (col) => html`
-                        <td class=${col.align === 'right' ? 'align-right' : ''}>
+                        <td part="cell" class=${col.align === 'right' ? 'align-right' : ''}>
                           ${row[col.key] as string}
                         </td>
                       `
