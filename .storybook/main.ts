@@ -3,6 +3,7 @@ import remarkGfm from 'remark-gfm';
 
 const config: StorybookConfig = {
   stories: ['../docs/**/*.mdx', '../src/**/*.stories.ts'],
+  staticDirs: ['../public'],
   addons: [
     {
       name: '@storybook/addon-essentials',

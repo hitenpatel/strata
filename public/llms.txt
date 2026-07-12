@@ -1,0 +1,26 @@
+# Strata
+
+> A themeable, accessible design system built layer by layer — a two-tier W3C design-token architecture and 21 Lit 3 web components with typed React 19 and Vue 3 adapters, documented in this Storybook. Built by Hiten Patel (https://hiten.dev).
+
+## Architecture
+
+- Tokens: single W3C Design Tokens source of truth (`tokens/tokens.json`), two tiers — primitives (colour ramps, spacing, radii, shadows, motion) and semantic role aliases (`surface`, `text-muted`, `accent`, `danger-subtle`) defined per theme.
+- Themes: light (default) and dark via `data-theme`; every semantic token re-mapped, components never reference primitives directly.
+- Variants: alternate accent layered on either theme (`data-variant="showcase"`) — brand theming without touching component code.
+- Components: Lit 3 web components consuming only `--strata-*` semantic custom properties, so they respond to theme/variant switches for free.
+- Adapters: typed React wrappers via @lit/react and native Vue 3 support.
+
+## Accessibility
+
+- WCAG 2.2 AA contrast in both themes; forced-colors mode mapped to system colours
+- Designed `:focus-visible` states — two-layer ring (2px surface, 4px focus colour), never removed
+- 40px minimum interactive targets; `prefers-reduced-motion` honoured
+- Roving tabindex + arrow-key patterns (Tabs, Menu, RadioGroup); Escape dismisses overlays
+- Every component ships axe-checked tests (@open-wc/testing); 170+ tests run in CI
+
+## Use it
+
+- npm: `npm install @hitenpatel/strata`
+- Live Storybook: https://ui.hiten.dev
+- Author: Hiten Patel — senior frontend engineer, https://hiten.dev
+- Full CV: https://hiten.dev/llms.txt and https://ask.hiten.dev
