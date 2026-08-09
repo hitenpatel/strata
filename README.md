@@ -26,12 +26,12 @@ A themeable, accessible design system built layer by layer — two-tier design t
 ## Usage
 
 ```bash
-npm install @hitenpatel/strata
+npm install @hiten_patel/strata
 ```
 
 ```js
-import '@hitenpatel/strata';          // registers all elements
-import '@hitenpatel/strata/tokens.css'; // design token custom properties
+import '@hiten_patel/strata';          // registers all elements
+import '@hiten_patel/strata/tokens.css'; // design token custom properties
 ```
 
 ```html
@@ -48,7 +48,7 @@ One Lit core, consumable everywhere. Full guides live in the
 (not attributes) and custom events mapped to `onXxx` props:
 
 ```tsx
-import { Button, Pagination } from '@hitenpatel/strata/react';
+import { Button, Pagination } from '@hiten_patel/strata/react';
 
 <Pagination page={page} total={12} onPageChange={(e) => setPage(e.detail.page)} />
 <Button variant="primary" loading={saving}>Save</Button>
@@ -58,7 +58,7 @@ import { Button, Pagination } from '@hitenpatel/strata/react';
 
 ```ts
 // vite.config.ts
-import { isStrataElement } from '@hitenpatel/strata/vue';
+import { isStrataElement } from '@hiten_patel/strata/vue';
 vue({ template: { compilerOptions: { isCustomElement: isStrataElement } } });
 ```
 
