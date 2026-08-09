@@ -2,6 +2,44 @@
   name="description"
   content="Strata — a themeable, accessible design system: two-tier W3C design tokens, 21 Lit 3 web components, React 19 and Vue 3 adapters. WCAG 2.2 AA, axe-tested."
 />
+<meta name="theme-color" content="#1b1c1d" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)" />
+<style>
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    background: #1b1c1d;
+    color: #fff;
+    padding: 0.75rem 1rem;
+    z-index: 99999;
+    text-decoration: none;
+    font-weight: 500;
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 0.95rem;
+    border-radius: 0 0 4px 0;
+  }
+  .skip-link:focus {
+    left: 0;
+    top: 0;
+    outline: 3px solid #6c7de8;
+    outline-offset: 2px;
+  }
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var a = document.createElement('a');
+    a.className = 'skip-link';
+    a.href = '#storybook-preview-iframe';
+    a.textContent = 'Skip to content';
+    document.body.insertBefore(a, document.body.firstChild);
+    var footer = document.createElement('div');
+    footer.setAttribute('aria-label', 'Site footer');
+    footer.style.cssText = 'position:fixed;bottom:0;right:0;padding:4px 12px;font-size:0.75rem;font-family:system-ui,-apple-system,sans-serif;color:#888;z-index:10;';
+    footer.innerHTML = '<a href="mailto:hello@hiten.dev" style="color:inherit;text-decoration:none;" aria-label="Contact Hiten Patel">hello@hiten.dev</a> &middot; <a href="https://hiten.dev" style="color:inherit;text-decoration:none;" rel="author noopener">hiten.dev</a>';
+    document.body.appendChild(footer);
+  });
+</script>
 <link rel="canonical" href="https://ui.hiten.dev/" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://ui.hiten.dev/" />
