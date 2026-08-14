@@ -19,6 +19,7 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: pnpm tokens
       - run: pnpm build-storybook
       - name: Pre-deploy asset gate
         run: |
